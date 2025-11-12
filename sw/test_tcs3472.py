@@ -105,6 +105,9 @@ class TCS34725:
     def calculate_lux(self, r, g, b):
         """Approximate lux value."""
         return int((-0.32466 * r) + (1.57837 * g) + (-0.73191 * b))
+    
+    def calculate_ratios(self, r, g, b, clear):
+        return [r / clear, g / clear, b / clear] 
 
 # -------------------------
 # Main program
@@ -112,18 +115,24 @@ class TCS34725:
 try:
     # Initialize I2C (adjust pins for your board)
     i2c = I2C(1, scl=Pin(15), sda=Pin(14), freq=400000)
-
+    print(i2c.scan())
     sensor = TCS34725(i2c)
 
     while True:
         clear, red, green, blue = sensor.read_raw()
         temp = sensor.calculate_color_temperature(red, green, blue)
         lux = sensor.calculate_lux(red, green, blue)
+        red_ratio, green_ratio, blue_ratio = sensor.calculate_ratios(red, green, blue, clear)
+        
 
         print("Clear: {}, Red: {}, Green: {}, Blue: {}".format(clear, red, green, blue))
+        print("Ratios: Red: {}, Green: {}, Blue: {}".format(red_ratio, green_ratio, blue_ratio))
         print("Color Temp: {} K, Lux: {}".format(temp, lux))
         print("-" * 40)
         time.sleep(1)
+        
+        # Typical Values of ratios for the blocks, from 0-5cm away from the block
+        # Red block: r:0.40-0.46, g:0.21-0.29 b:0.28-0.36
 
 except Exception as e:
     print("Error:", e)
