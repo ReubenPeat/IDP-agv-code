@@ -22,7 +22,7 @@ class Motor:
 
 def motor_testing():
     leftMotor = Motor(dirPin=4, PWMPin=5)  # Motor 3 is controlled from Motor Driv2 #1, which is on GP4/5
-    rightMotor = Motor(dirPin=6, PWMPin=7)
+    rightMotor = Motor(dirPin=7, PWMPin=6)
     
     forward_button = Pin(12, Pin.IN, Pin.PULL_DOWN)
     left_button = Pin(13, Pin.IN, Pin.PULL_DOWN)
@@ -32,7 +32,19 @@ def motor_testing():
         if forward_button.value() == 1:
             leftMotor.Forward()
             rightMotor.Forward()
-            sleep(2)
+            sleep(1)
+            leftMotor.off()
+            rightMotor.off()
+        elif left_button.value() == 0:
+            leftMotor.Reverse()
+            rightMotor.Forward()
+            sleep(0.5)
+            leftMotor.off()
+            rightMotor.off()
+        elif right_button.value() == 0:
+            leftMotor.Forward()
+            rightMotor.Reverse()
+            sleep(0.5)
             leftMotor.off()
             rightMotor.off()
             
@@ -40,5 +52,5 @@ def motor_testing():
 
 
 if __name__ == "__main__":
-    test_motor3()
+    motor_testing()
 
