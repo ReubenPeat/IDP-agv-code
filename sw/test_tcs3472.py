@@ -1,26 +1,3 @@
-"""
-
-from machine import Pin, SoftI2C, I2C
-from libs.tcs3472_micropython.tcs3472 import tcs3472
-from utime import sleep
-
-def test_tcs3472():
-    # Both options works
-    # i2c_bus = SoftI2C(sda=Pin(8), scl=Pin(9))  # I2C0 on GP8 & GP9
-    i2c_bus = I2C(id=0, sda=Pin(8), scl=Pin(9)) # I2C0 on GP8 & GP9
-    # print(i2c_bus.scan()[0])  # Get the address (nb 41=0x29)
-    tcs = tcs3472(i2c_bus)
-
-    while True:
-        print("Light:", tcs.light())
-        print("RGB:", tcs.rgb())
-        sleep(1)
-
-
-if __name__ == "__main__":
-    test_tcs3472()
-
-"""
 from machine import Pin, I2C
 import time
 import math
@@ -132,7 +109,10 @@ try:
         time.sleep(1)
         
         # Typical Values of ratios for the blocks, from 0-5cm away from the block
-        # Red block: r:0.40-0.46, g:0.21-0.29 b:0.28-0.36
+        # Red block:    r:0.35-0.46, g:0.21-0.29 b:0.26-0.36
+        # Yellow block: r:0.30-0.41, g:0.35-0.44 b:0.22-0.26
+        # Green block:  r:0.15-0.40, g:0.34-0.39 b:0.31-0.45
+        # Blue block:   r:0.07-0.36, g:0.30-0.35 b:0.34-0.61
 
 except Exception as e:
     print("Error:", e)
