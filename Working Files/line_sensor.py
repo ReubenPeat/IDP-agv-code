@@ -18,6 +18,8 @@ def line_sensor_motor_control():
     #rightMotor = Motor(dirPin=7, PWMPin=6)
     
     motor_controller = Motor_controller(4, 5, 7, 6)
+    # Plug in left motor to slot 3, and right motor to slot 4
+    # Plug red on the left, and orange on the right
 
     #no upcoming corners/turns
     if line_sensor_front_left.value() == 0 and line_sensor_front_right.value() == 0:
@@ -30,9 +32,11 @@ def line_sensor_motor_control():
         #realign if either sensor is above the white line
         elif line_sensor_back_left.value() == 1:
             motor_controller.decrease_left_motor_speed(20)
+            sleep(1)
         
         elif line_sensor_back_right.value() == 1:
             motor_controller.decrease_right_motor_speed(20)
+            sleep(1)
          
         
     #approaching corner right turn

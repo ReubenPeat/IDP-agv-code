@@ -56,9 +56,3 @@ class Motor_controller:
         def Reverse(self, speed=30):
             self.mDir.value(1)
             self.pwm.duty_u16(int(65535 * speed / 100))
-
-
-def motor_testing():
-    leftMotor = Motor(dirPin=4, PWMPin=5)  # Motor 3 is controlled from Motor Driv2 #1, which is on GP4/5
-    rightMotor = Motor(dirPin=7, PWMPin=6)
-    
