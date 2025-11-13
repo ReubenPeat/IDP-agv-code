@@ -14,33 +14,36 @@ line_sensor_back_right = Pin(line_sensor_back_right_pin, Pin.IN, Pin.PULL_DOWN) 
 
 
 def line_sensor_motor_control():
-    leftMotor = Motor(dirPin=4, PWMPin=5)  # Motor 3 is controlled from Motor Driv2 #1, which is on GP4/5
-    rightMotor = Motor(dirPin=7, PWMPin=6)
+    #leftMotor = Motor(dirPin=4, PWMPin=5)  # Motor 3 is controlled from Motor Driv2 #1, which is on GP4/5
+    #rightMotor = Motor(dirPin=7, PWMPin=6)
     
     motor_controller = Motor_controller(4, 5, 7, 6)
 
     #no upcoming corners/turns
-    if line_sensor_front_left = False and line_sensor_front_right = False:
+    if line_sensor_front_left.value() == 0 and line_sensor_front_right.value() == 0:
+        print("black")
         
         #forward movement when both sensors are either side of white line
-        if line_sensor_back_left = False and line_sensor_back_right = False:
+        if line_sensor_back_left.value() == 0 and line_sensor_back_right.value() == 0:
             motor_controller.move_straight(100)
         
         #realign if either sensor is above the white line
-        elif line_sensor_back_left = True:
-            decrease_left_motor_speed(20)
+        elif line_sensor_back_left.value() == 1:
+            motor_controller.decrease_left_motor_speed(20)
         
-        elif line_sensor_back_right = True:
-            decrease_right_motor_speed(20)
+        elif line_sensor_back_right.value() == 1:
+            motor_controller.decrease_right_motor_speed(20)
          
         
     #approaching corner right turn
-    elif line_sensor_front_right = True:
-        decrease_right_motor_speed(100)
+    elif line_sensor_front_right.value() == 1:
+        motor_controller.decrease_right_motor_speed(100)
         sleep(1)
         
     #approaching corner left turn
-    elif line_sensor_front_left = True:
-        decrease_left_motor_speed(100)
+    elif line_sensor_front_left.value() == 1:
+        motor_controller.decrease_left_motor_speed(100)
         sleep(1)
 
+while True:
+    line_sensor_motor_control()

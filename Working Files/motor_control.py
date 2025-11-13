@@ -1,3 +1,5 @@
+from machine import Pin, PWM
+
 class Motor_controller:
     
     left_motor_speed = 0
@@ -7,34 +9,34 @@ class Motor_controller:
         self.left_Motor = self.Motor(left_dirPin, left_PWPin)
         self.right_Motor = self.Motor(right_dirPin, right_PWPin)
         
-    def set_speeds(self, left_speed, right_speed)
+    def set_speeds(self, left_speed, right_speed):
         if left_speed >= 0:
-            left_Motor.Forward(speed)
+            self.left_Motor.Forward(left_speed)
         else:
-            left_Motor.Reverse(speed)
+            self.left_Motor.Reverse(left_speed)
             
         self.left_motor_speed = left_speed
         
         if right_speed >= 0:
-            right_Motor.Forward(speed)
+            self.right_Motor.Forward(right_speed)
         else:
-            right_Motor.Reverse(speed)
+            self.right_Motor.Reverse(right_speed)
             
         self.right_motor_speed = right_speed
     
     def move_straight(self, speed=100):
-        set_speeds(speed, speed)
+        self.set_speeds(speed, speed)
         
     def decrease_left_motor_speed(self, change_in_speed=20):
         new_left_speed = self.left_motor_speed - change_in_speed
-        set_speeds(new_left_speed, self.right_motor_speed)
+        self.set_speeds(new_left_speed, self.right_motor_speed)
     
     def decrease_right_motor_speed(self, change_in_speed=20):
         new_right_speed = self.right_motor_speed - change_in_speed
-        set_speeds(self.left_motor_speed, new_right_speed)
+        self.set_speeds(self.left_motor_speed, new_right_speed)
         
     def stop(self):
-        set_speeds(0, 0)
+        self.set_speeds(0, 0)
         
     
     class Motor:
