@@ -13,14 +13,4 @@ button = Pin(button_pin, Pin.IN, Pin.PULL_DOWN)
 while not in start/finish area:
   led.value(button.value())
   flash using electronics
-  
-#Set the line senor pins
-line_sensor_pin_1 = 12
-line_sensor_pin_2 = 12
-line_sensor_pin_3 = 12
-line_sensor_pin_4 = 12
-line_sensor_1 = Pin(button_pin, Pin.IN, Pin.PULL_DOWN)
-line_sensor_2 = Pin(button_pin, Pin.IN, Pin.PULL_DOWN)
-line_sensor_3 = Pin(button_pin, Pin.IN, Pin.PULL_DOWN)
-line_sensor_4 = Pin(button_pin, Pin.IN, Pin.PULL_DOWN)
 
