@@ -23,6 +23,10 @@ motor_controller = Motor_controller(4, 5, 7, 6)
 
 route = Route() # initialise default route
 
+while button.value() == 0:
+    sleep(0.1)
+while button.value() == 1:
+    pass
 
 # Main loop: run until button pressed again
 while True:

@@ -42,7 +42,7 @@ class Motor_controller:
         else:
             self.set_speeds(50, -50)
             
-        sleep(0.01*angle)
+        sleep(0.017*angle)
         
         self.move_straight(50)
         

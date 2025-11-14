@@ -21,44 +21,42 @@ def line_sensor_motor_control(motor_controller, route):
         
         #forward movement when both sensors are either side of white line
         if line_sensor_inner_left.value() == 0 and line_sensor_inner_right.value() == 0:
-            motor_controller.move_straight(50)
+            motor_controller.move_straight(55)
             
         elif line_sensor_inner_left.value() == 1 and line_sensor_inner_right.value() == 1:
             motor_controller.stop()
         
         #realign if either sensor is above the white line
         elif line_sensor_inner_right.value() == 1:
-            motor_controller.set_right_motor_speed(30)
-            motor_controller.set_left_motor_speed(50)
+            motor_controller.set_right_motor_speed(25)
+            motor_controller.set_left_motor_speed(55)
         
         elif line_sensor_inner_left.value() == 1:
-            motor_controller.set_left_motor_speed(30)
-            motor_controller.set_right_motor_speed(50)
+            motor_controller.set_left_motor_speed(25)
+            motor_controller.set_right_motor_speed(55)
         
     # Approaching intersection - either of the front sensors detect something
     else:
         instruction = route.intersection()
         print(instruction)
         if instruction == "forwards":
-            motor_controller.move_straight(50)
-            sleep(1)
+            motor_controller.move_straight(55)
+            sleep(0.8)
         elif instruction == "backwards":
             motor_controller.move_straight(-40)
             sleep(1)
         elif instruction == "turn":
             motor_controller.rotate(180)
         elif instruction == "left":
+            motor_controller.move_straight(50)
+            sleep(1.7)
             motor_controller.rotate(90, "left")
         elif instruction == "right":
+            motor_controller.move_straight(50)
+            sleep(1.7)
             motor_controller.rotate(90, "right")
         elif instruction == "stop":
             motor_controller.stop()
             sleep(10)
 
 
-motor_controller = Motor_controller(4, 5, 7, 6)
-
-route = Route() # initialise default route
-
-while True:
-    line_sensor_motor_control(motor_controller, route)
