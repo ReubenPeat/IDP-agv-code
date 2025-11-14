@@ -30,7 +30,7 @@ class Motor_controller:
     def set_left_motor_speed(self, left_speed=50):
         self.set_speeds(left_speed, self.right_motor_speed)
         
-    def set_left_motor_speed(self, right_speed=50):
+    def set_right_motor_speed(self, right_speed=50):
         self.set_speeds(self.left_motor_speed, right_speed)
         
     def rotate(self, angle=180, direction="left"):
