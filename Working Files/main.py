@@ -17,16 +17,24 @@ line_sensor_outer_right = Pin(line_sensor_outer_right_pin, Pin.IN, Pin.PULL_DOWN
 line_sensor_inner_left = Pin(line_sensor_inner_left_pin, Pin.IN, Pin.PULL_DOWN)
 line_sensor_inner_right = Pin(line_sensor_inner_right_pin, Pin.IN, Pin.PULL_DOWN)
 
+#Set the LED pin and configuration
+led_pin = 22
+led = Pin(led_pin, Pin.OUT)
+
 # Plug in left motor to slot 3, and right motor to slot 4
 # Plug red on the left, and orange on the right
 motor_controller = Motor_controller(4, 5, 7, 6)
 
 route = Route() # initialise default route
 
+led.value(0)
+
 while button.value() == 0:
     sleep(0.1)
 while button.value() == 1:
     pass
+
+led.value(1)
 
 # Main loop: run until button pressed again
 while True:
@@ -37,5 +45,6 @@ while True:
     # Line following control
     line_sensor_motor_control(motor_controller, route)
 
+led.value(0)
 # Stop the motors when exiting
 motor_controller.stop()

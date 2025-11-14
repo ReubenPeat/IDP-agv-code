@@ -36,13 +36,13 @@ class Motor_controller:
         
     def rotate(self, angle=180, direction="left"):
         self.stop()
-        sleep(0.5)
+        sleep(0.2)
         if direction == "left":
             self.set_speeds(-50, 50)
         else:
             self.set_speeds(50, -50)
             
-        sleep(0.017*angle)
+        sleep(0.016*angle)
         
         self.move_straight(50)
         
