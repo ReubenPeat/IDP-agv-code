@@ -24,8 +24,26 @@ class Motor_controller:
             
         self.right_motor_speed = right_speed
     
-    def move_straight(self, speed=100):
+    def move_straight(self, speed=50):
         self.set_speeds(speed, speed)
+        
+    def set_left_motor_speed(self, left_speed=50):
+        self.set_speeds(left_speed, self.right_motor_speed)
+        
+    def set_left_motor_speed(self, right_speed=50):
+        self.set_speeds(self.left_motor_speed, right_speed)
+        
+    def rotate(self, angle=180, direction="left"):
+        self.stop()
+        sleep(0.5)
+        if direction == "left":
+            self.set_speeds(-50, 50)
+        else:
+            self.set_speeds(50, -50)
+            
+        sleep(0.01*angle)
+        
+        self.move_straight(50)
         
     def decrease_left_motor_speed(self, change_in_speed=20):
         new_left_speed = self.left_motor_speed - change_in_speed

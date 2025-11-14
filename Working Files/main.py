@@ -2,25 +2,22 @@ from machine import Pin
 from utime import sleep
 from line_sensor import line_sensor_motor_control
 from motor_control import Motor_controller
+from route_planning import Route
 
-"""
-#Set the LED pin and configuration
-led_pin = 28
-led = Pin(led_pin, Pin.OUT)
+line_sensor_front_left_pin = 14
+line_sensor_front_right_pin = 15
+line_sensor_back_left_pin = 16
+line_sensor_back_right_pin = 17
+line_sensor_front_left = Pin(line_sensor_front_left_pin, Pin.IN, Pin.PULL_DOWN)
+line_sensor_front_right = Pin(line_sensor_front_right_pin, Pin.IN, Pin.PULL_DOWN)
+line_sensor_back_left = Pin(line_sensor_back_left_pin, Pin.IN, Pin.PULL_DOWN)
+line_sensor_back_right = Pin(line_sensor_back_right_pin, Pin.IN, Pin.PULL_DOWN)
 
-#Set the button pin
-button_pin = 12
-button = Pin(button_pin, Pin.IN, Pin.PULL_DOWN)
-
-#Continiously update the LED value and print said value
-while True:
-  led.value(button.value())
-  sleep(0.1)
-  print(button.value())
-"""
-
-motor_controller = Motor_controller(4, 5, 7, 6)
 # Plug in left motor to slot 3, and right motor to slot 4
 # Plug red on the left, and orange on the right
+motor_controller = Motor_controller(4, 5, 7, 6)
+
+route = Route() # initialise default route
+
 while True:
-    line_sensor_motor_control(motor_controller)
+    line_sensor_motor_control(motor_controller, route)

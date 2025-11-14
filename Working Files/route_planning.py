@@ -11,32 +11,13 @@ class Route:
     def intersection(self):
         instruction = self.route.pop() # Next instruction in the route
         if instruction == 'f':
-            return "forward"      # forward
+            return "forwards"     # forwards
         elif instruction == 'b':
             return "backwards"    # reverse
         elif instruction == 't':
             return "turn"         # Turn 180 deg
-        elif intstruction == 'l':
-            if line_sensor_front_left.value() == 1:
-                return "left"     # If the line goes to the left, follow it!
-            else:
-                self.route.insert(0, instruction)
-                return "forward"  # Ignore
-            
-        elif intstruction == 'r':
-            if line_sensor_front_right.value() == 1:
-                return "right"    # If the line goes to the right, follow it!
-            else:
-                self.route.insert(0, instruction)
-                return "forward"  # Ignore
+        elif instruction == 'l':
+            return "left"     # If the line goes to the left, follow it!
+        elif instruction == 'r':
+            return "right"    # If the line goes to the right, follow it!
     
-    
-    
-    
-    
-    
-    
-line_sensor_front_left_pin = 14
-line_sensor_front_right_pin = 15
-line_sensor_front_left = Pin(line_sensor_front_left_pin, Pin.IN, Pin.PULL_DOWN)
-line_sensor_front_right = Pin(line_sensor_front_right_pin, Pin.IN, Pin.PULL_DOWN)
