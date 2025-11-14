@@ -36,21 +36,24 @@ def line_sensor_motor_control(motor_controller, route):
             motor_controller.set_right_motor_speed(50)
         
     # Approaching intersection - either of the front sensors detect something
-    """
     else:
         instruction = route.intersection()
         print(instruction)
         if instruction == "forwards":
-            pass
+            motor_controller.move_straight(50)
+            sleep(1)
         elif instruction == "backwards":
             motor_controller.move_straight(-40)
+            sleep(1)
         elif instruction == "turn":
             motor_controller.rotate(180)
         elif instruction == "left":
             motor_controller.rotate(90, "left")
         elif instruction == "right":
             motor_controller.rotate(90, "right")
-    """
+        elif instruction == "stop":
+            motor_controller.stop()
+            sleep(10)
 
 
 motor_controller = Motor_controller(4, 5, 7, 6)
