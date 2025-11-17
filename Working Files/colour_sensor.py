@@ -1,5 +1,3 @@
-
-
 from machine import Pin, SoftI2C, I2C
 from libs.tcs3472_micropython.tcs3472 import tcs3472
 from utime import sleep

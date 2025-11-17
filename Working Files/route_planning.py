@@ -1,6 +1,6 @@
 class Route:
     
-    # The route for testing on Monday
+    # The route for testing on 17/11
     route = ['f', 'l', 'f', 'r', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'r', 'f', 'r', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'r', 'f', 'l', 's']
     # No attributes to initialise - yet!
     def __init__(self):
