@@ -38,7 +38,7 @@ led.value(1)
 
 # Main loop: run until button pressed again
 while True:
-    # If button pressed again → exit
+    # If button pressed again, exit
     if button.value() == 1:
         break
 
