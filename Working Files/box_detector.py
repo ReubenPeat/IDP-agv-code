@@ -39,10 +39,3 @@ def detection_trigger():
             motor_controller.stop()
             #pick up box using linear actuator code
             
-            
-            
-            
-
-
-            
-            
