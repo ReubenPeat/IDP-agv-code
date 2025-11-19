@@ -23,19 +23,21 @@ def detection_trigger():
 
         distance = vl53l0.read()
         
-        #continue if there is no box
+        # continue if there is no box
         if distance > 350:
             vl53l0.stop()         # Stop device
-            motor_controller.move_straight(55)
+            line_sensor.line_sensor_motor_control(motor_controller, f)
         
-        #turn to collect box
+        # turn to collect box
         else:
             vl53l0.stop()         # Stop device
-            line_sensor_motor_control(motor_controller, r) # Rotate 90deg clockwise to face box
+            line_sensor.line_sensor_motor_control(motor_controller, r) # Rotate 90deg clockwise to face box
             
-            while ultrasound_distance > specified_distance: # Fill in from ultrasound code when finished
-                motor_controller.move_straight(55)
+            # move forward until the line break
+            line_sensor.line_sensor_motor_control(motor_controller, f)
             
-            motor_controller.stop()
+            if line_sensor.line_sensor_inner_left.value() == 0 and line_sensor.line_sensor_inner_right.value() == 0:
+                motor_controller.stop()
+            
             #pick up box using linear actuator code
             
