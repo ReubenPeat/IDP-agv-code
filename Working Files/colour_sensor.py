@@ -2,18 +2,6 @@ from machine import Pin, SoftI2C, I2C
 from libs.tcs3472_micropython.tcs3472 import tcs3472
 from utime import sleep
 
-def test_tcs3472():
-    # Both options works
-    # i2c_bus = SoftI2C(sda=Pin(6), scl=Pin(7))  # I2C0 on GP6 & GP7
-    i2c_bus = I2C(id=0, sda=Pin(6), scl=Pin(7)) # I2C0 on GP6 & GP7
-    # print(i2c_bus.scan()[0])  # Get the address (nb 41=0x29)
-    tcs = tcs3472(i2c_bus)
-
-    while True:
-        print("Light:", tcs.light())
-        print("RGB:", tcs.rgb())
-        sleep(1)
-
 
 from machine import Pin, I2C
 import time
@@ -108,7 +96,7 @@ class TCS34725:
 # -------------------------
 try:
     # Initialize I2C (adjust pins for your board)
-    i2c = I2C(1, scl=Pin(15), sda=Pin(14), freq=400000)
+    i2c = I2C(1, scl=Pin(2), sda=Pin(3), freq=400000)
     print(i2c.scan())
     sensor = TCS34725(i2c)
 
@@ -117,31 +105,29 @@ try:
         temp = sensor.calculate_color_temperature(red, green, blue)
         lux = sensor.calculate_lux(red, green, blue)
         red_ratio, green_ratio, blue_ratio = sensor.calculate_ratios(red, green, blue, clear)
-        
 
-        print("Clear: {}, Red: {}, Green: {}, Blue: {}".format(clear, red, green, blue))
-        print("Ratios: Red: {}, Green: {}, Blue: {}".format(red_ratio, green_ratio, blue_ratio))
-        print("Color Temp: {} K, Lux: {}".format(temp, lux))
-        print("-" * 40)
-        time.sleep(1)
+        #print("Clear: {}, Red: {}, Green: {}, Blue: {}".format(clear, red, green, blue))
+        #print("Ratios: Red: {}, Green: {}, Blue: {}".format(red_ratio, green_ratio, blue_ratio))
+        #print("Color Temp: {} K, Lux: {}".format(temp, lux))
+        #print("-" * 40)
+        #time.sleep(1)
         
         # Typical Values of ratios for the blocks, from 0-5cm away from the block
         # Red block:    r:0.35-0.46, g:0.21-0.29 b:0.26-0.36
         # Yellow block: r:0.30-0.41, g:0.35-0.44 b:0.22-0.26
         # Green block:  r:0.15-0.40, g:0.34-0.39 b:0.31-0.45
-        # Blue block:   r:0.07-0.36, g:0.30-0.35 b:0.34-0.61
-                    
+        # Blue block:   r:0.07-0.36, g:0.30-0.35 b:0.34-0.61     
 
 except Exception as e:
     print("Error:", e)
     
 def block_identification(red_ratio, green_ratio, blue_ratio):
     if red_ratio > 0.35 and red_ratio < 0.46 and green_ratio > 0.21 and green_ratio < 0.29 and blue_ratio > 0.26 and blue_ratio < 0.36:
-        return 'red'
+        return 'red block'
     elif red_ratio > 0.3 and red_ratio < 0.41 and green_ratio > 0.35 and green_ratio < 0.44 and blue_ratio > 0.22 and blue_ratio < 0.26:
-        return 'yellow'
+        return 'yellow block'
     elif red_ratio > 0.15 and red_ratio < 0.4 and green_ratio > 0.34 and green_ratio < 0.39 and blue_ratio > 0.31 and blue_ratio < 0.45:
-        return 'green'
+        return 'green block'
     elif red_ratio > 0.07 and red_ratio < 0.36 and green_ratio > 0.3 and green_ratio < 0.35 and blue_ratio > 0.34 and blue_ratio < 0.61:
-        return 'blue'
+        return 'blue block'
     else print('retest')
