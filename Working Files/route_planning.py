@@ -1,7 +1,5 @@
-
 class Route:   
 
-    # No attributes to initialise - yet!
     def __init__(self, startVertex, endVertex):
         self.graph = Graph()
         self.vertexRoute, self.instructions = self.graph.plan_route(startVertex, endVertex)
@@ -14,6 +12,20 @@ class Route:
     def intersection(self):
         self.currentPosition = self.vertexRoute.pop(0)  # Now in new position, as given by the route
         instruction = self.instructions.pop(0)     # Next instruction in the route
+
+class Route:   
+
+    def __init__(self, startVertex, endVertex):
+        graph = Graph()
+        self.vertexRoute, self.instructions = self.graph.dijkstra(startVertex, endVertex)
+        self.currentPosition = self.vertexRoute.pop(0)
+        # The route for the line sensing teston 17/11
+        #self.route = ['f', 'l', 'f', 'r', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'r', 'f', 'r', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'r', 'f', 'l', 's']
+    
+    # Called when we reach an intersection (when front sensors detect something) to check what to do
+    def intersection(self):
+        instruction = self.route.pop(0) # Next instruction in the route
+
         if instruction == 'f':
             return "forwards"
         elif instruction == 'b':
@@ -160,8 +172,7 @@ class Graph:
         self.addEdgeVertices("IUR-6", "PUR-2", 10)
         self.addDirectionVertices("IUR-6", "IUR-6", 't')
         
-        
-        
+
     def get_Vertices(self):
         return self.Vertices.copy()
     
@@ -234,6 +245,7 @@ class Graph:
                 break
             
             for i in range(0, self.get_NumVertices()):              
+
                 if self.get_DistMatrix()[currentIndex][i] != 0:              # Find all the vertices directly connected to the current vertex
                     vertex = self.get_Vertices()[i]
                     distanceFromStart = self.get_DistMatrix()[currentIndex][i] + minDistances[currentVertex]
@@ -246,6 +258,7 @@ class Graph:
             newVertex = previousVertex[vertexRoute[0]]
             vertexRoute = [newVertex] + vertexRoute       # Add the 'next' vertex to the start of the list as we are going backwards from the end
             
+
         return vertexRoute      
             
     def plan_route(self, startVertex, endVertex):
@@ -273,3 +286,4 @@ print(route.get_currentPosition())
 print(route.intersection())
 print(route.intersection())
 print(route.get_currentPosition())
+
