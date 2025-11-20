@@ -1,9 +1,9 @@
 class Route:   
 
-    def __init__(self, startVertex, endVertex):
+    def __init__(self, startVertex="Start", endVertex="PUR-2"):
         self.graph = Graph()
         self.vertexRoute, self.instructions = self.graph.plan_route(startVertex, endVertex)
-        self.currentPosition = startVertex
+        self.currentPosition = self.vertexRoute.pop(0)
     
     def get_currentPosition(self):
         return self.currentPosition
@@ -12,20 +12,6 @@ class Route:
     def intersection(self):
         self.currentPosition = self.vertexRoute.pop(0)  # Now in new position, as given by the route
         instruction = self.instructions.pop(0)     # Next instruction in the route
-
-class Route:   
-
-    def __init__(self, startVertex, endVertex):
-        graph = Graph()
-        self.vertexRoute, self.instructions = self.graph.dijkstra(startVertex, endVertex)
-        self.currentPosition = self.vertexRoute.pop(0)
-        # The route for the line sensing teston 17/11
-        #self.route = ['f', 'l', 'f', 'r', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'r', 'f', 'r', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'r', 'f', 'l', 's']
-    
-    # Called when we reach an intersection (when front sensors detect something) to check what to do
-    def intersection(self):
-        instruction = self.route.pop(0) # Next instruction in the route
-
         if instruction == 'f':
             return "forwards"
         elif instruction == 'b':
@@ -281,9 +267,3 @@ class Graph:
         
         
 route = Route("Start", "IR")
-print(route.instructions)
-print(route.get_currentPosition())
-print(route.intersection())
-print(route.intersection())
-print(route.get_currentPosition())
-

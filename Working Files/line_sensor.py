@@ -34,31 +34,12 @@ def line_sensor_motor_control(motor_controller, route):
         elif line_sensor_inner_left.value() == 0:
             motor_controller.set_left_motor_speed(25)
             motor_controller.set_right_motor_speed(55)
+            
+        return "pass"
         
     # Approaching intersection - either of the front sensors detect something
     else:
-        instruction = route.intersection()
-        print(instruction)
-        if instruction == "forwards":
-            motor_controller.move_straight(45)       # Move forward over the line to prevent double detection
-            sleep(0.8)
-        elif instruction == "backwards":
-            motor_controller.move_straight(-40)
-            sleep(1)
-        elif instruction == "turn":
-            motor_controller.rotate(180)
-        elif instruction == "left":
-            motor_controller.move_straight(48)       # Move forward so bot turns at the corner exactly
-            sleep(1.7)
-            motor_controller.rotate(90, "left")      # Rotate 90deg anticlockwise
-        elif instruction == "right":
-            motor_controller.move_straight(48)       # Move forward so bot turns at the corner exactly
-            sleep(1.7)
-            motor_controller.rotate(90, "right")     # Rotate 90deg clockwise
-        elif instruction == "stop":  
-            motor_controller.move_straight(50)       # Get into position so the whole bot is inside the finish area
-            sleep(2.5)
-            motor_controller.stop()
-            sleep(1000)
+        return route.intersection()
+        
 
 
