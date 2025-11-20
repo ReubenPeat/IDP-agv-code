@@ -4,14 +4,14 @@ from utime import sleep
 from motor_control import Motor_controller
 from line_sensor import line_sensor_motor_control
 
-#from map import nodes
+# from map import nodes
 
 def detection_trigger():
     # config I2C Bus
     i2c_bus = I2C(id=0, sda=Pin(8), scl=Pin(9)) # I2C0 on GP8 & GP9
     # print(i2c_bus.scan())  # Get the address (nb 41=0x29, 82=0x52)
     
-    # Setup vl53l0 object
+    # Setup time of flight sensor
     vl53l0 = VL53L0X(i2c_bus)
     vl53l0.set_Vcsel_pulse_period(vl53l0.vcsel_period_type[0], 18)
     vl53l0.set_Vcsel_pulse_period(vl53l0.vcsel_period_type[1], 14)
