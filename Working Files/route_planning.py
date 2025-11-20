@@ -216,7 +216,6 @@ class Graph:
         index1 = self.get_Vertices().index(v1)
         index2 = self.get_Vertices().index(v2)
         self.addDirection(index1, index2, direction)
-        self.get_AdjMatrix()[i1][i2] = 1
         
     def dijkstra(self, startVertex, endVertex):
         minDistances = {vertex:10e8 for vertex in self.get_Vertices()}       # Set up to the minimum distances from the start vertex, initially basically infinite
@@ -259,7 +258,6 @@ class Graph:
             newVertex = previousVertex[vertexRoute[0]]
             vertexRoute = [newVertex] + vertexRoute       # Add the 'next' vertex to the start of the list as we are going backwards from the end
             
-<<<<<<< Updated upstream
 
         return vertexRoute      
             
