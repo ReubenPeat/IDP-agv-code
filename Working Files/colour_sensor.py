@@ -127,4 +127,5 @@ def block_identification(red_ratio, green_ratio, blue_ratio):
         return 'green block'
     elif red_ratio > 0.07 and red_ratio < 0.36 and green_ratio > 0.3 and green_ratio < 0.35 and blue_ratio > 0.34 and blue_ratio < 0.61:
         return 'blue block'
-    else print('retest')
+    else:
+        print('retest')

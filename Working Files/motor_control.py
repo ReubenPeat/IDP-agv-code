@@ -38,11 +38,11 @@ class Motor_controller:
         self.stop()
         sleep(0.2)
         if direction == "left":
-            self.set_speeds(-50, 50)
+            self.set_speeds(20, 90)
         else:
-            self.set_speeds(50, -50)
+            self.set_speeds(90, 20)
             
-        sleep(0.016*angle)
+        sleep(0.02*angle)
         
         self.move_straight(50)
         

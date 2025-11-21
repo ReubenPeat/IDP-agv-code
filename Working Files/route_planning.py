@@ -1,30 +1,33 @@
 class Route:   
 
-    def __init__(self, startVertex="Start", endVertex="PUR-2"):
+    def __init__(self, startVertex, endVertex):
         self.graph = Graph()
         self.vertexRoute, self.instructions = self.graph.plan_route(startVertex, endVertex)
         self.currentPosition = self.vertexRoute.pop(0)
+        print(self.instructions)
     
     def get_currentPosition(self):
         return self.currentPosition
     
     # Called when we reach an intersection (when front sensors detect something) to check what to do
     def intersection(self):
-        self.currentPosition = self.vertexRoute.pop(0)  # Now in new position, as given by the route
-        instruction = self.instructions.pop(0)     # Next instruction in the route
-        if instruction == 'f':
-            return "forwards"
-        elif instruction == 'b':
-            return "backwards"
-        elif instruction == 't':
-            return "turn"         # Turn 180 deg
-        elif instruction == 'l':
-            return "left" 
-        elif instruction == 'r':
-            return "right"
-        elif instruction == 's':
-            return "stop"
-        else:
+        try:
+            self.currentPosition = self.vertexRoute.pop(0)  # Now in new position, as given by the route
+            instruction = self.instructions.pop(0)     # Next instruction in the route
+            if instruction == 'f':
+                return "forwards"
+            elif instruction == 'b':
+                return "backwards"
+            elif instruction == 't':
+                return "turn"         # Turn 180 deg
+            elif instruction == 'l':
+                return "left" 
+            elif instruction == 'r':
+                return "right"
+            elif instruction == 's':
+                return "stop"
+        except:
+            print("Error")
             return "stop"
     
 
@@ -265,5 +268,3 @@ class Graph:
         
         return vertexRoute, instructions
         
-        
-route = Route("Start", "IR")

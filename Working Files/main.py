@@ -3,8 +3,7 @@ from utime import sleep
 from line_sensor import line_sensor_motor_control
 from motor_control import Motor_controller
 from route_planning import Route
-from colour_sensor import block_identification
-from b
+# from colour_sensor import block_identification
 
 #Set the button pin
 button_pin = 12
@@ -27,14 +26,14 @@ led = Pin(led_pin, Pin.OUT)
 # Plug red on the left, and orange on the right
 motor_controller = Motor_controller(4, 5, 7, 6)
 
-route = Route() # initialise default route
+route = Route("Start", "PUL-2") # initialise route
 
 led.value(0)
 
 while button.value() == 0:
-    sleep(0.1)
-while button.value() == 1:
     pass
+while button.value() == 1:
+    sleep(0.1)
 
 led.value(1)
 
@@ -46,29 +45,26 @@ while True:
 
     # Line following control
     instruction = line_sensor_motor_control(motor_controller, route)
+    if instruction != "pass":
+        print(instruction)
     if instruction == "pass":
         pass
     elif instruction == "forwards":
-        motor_controller.move_straight(45)       # Move forward over the line to prevent double detection
+        motor_controller.move_straight(90)       # Move forward until over the line
         while line_sensor_outer_left.value() == 1 or line_sensor_outer_right.value() == 1:
             pass
     elif instruction == "backwards":
-        motor_controller.move_straight(-40)
+        motor_controller.move_straight(-80)
         sleep(1)
     elif instruction == "turn":
         motor_controller.rotate(180)
     elif instruction == "left":
-        motor_controller.move_straight(48)       # Move forward so bot turns at the corner exactly
-        sleep(1.7)
         motor_controller.rotate(90, "left")      # Rotate 90deg anticlockwise
     elif instruction == "right":
-        motor_controller.move_straight(48)       # Move forward so bot turns at the corner exactly
-        sleep(1.7)
         motor_controller.rotate(90, "right")     # Rotate 90deg clockwise
     elif instruction == "stop":  
-        motor_controller.move_straight(50)       # Get into position so the whole bot is inside the finish area
-        sleep(2.5)
         motor_controller.stop()
+        break
 
 led.value(0)
 # Stop the motors when exiting
