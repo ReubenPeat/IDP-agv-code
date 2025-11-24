@@ -20,18 +20,18 @@ def line_sensor_motor_control(motor_controller, route):
     if line_sensor_outer_left.value() == 0 and line_sensor_outer_right.value() == 0:
         
         #forward movement when both sensors are inside the white line
-        if line_sensor_inner_left.value() == 0 and line_sensor_inner_right.value() == 0:
+        if line_sensor_inner_left.value() == 1 and line_sensor_inner_right.value() == 1:
             motor_controller.move_straight(95) #55
             
-        elif line_sensor_inner_left.value() == 1 and line_sensor_inner_right.value() == 1:
+        elif line_sensor_inner_left.value() == 0 and line_sensor_inner_right.value() == 0:
             motor_controller.stop()
         
         #realign if either sensor is outside the white line
-        elif line_sensor_inner_right.value() == 1:
+        elif line_sensor_inner_right.value() == 0:
             motor_controller.set_right_motor_speed(65) #25
             motor_controller.set_left_motor_speed(95) #55
         
-        elif line_sensor_inner_left.value() == 1:
+        elif line_sensor_inner_left.value() == 0:
             motor_controller.set_left_motor_speed(65) #25
             motor_controller.set_right_motor_speed(95) # 55
             
