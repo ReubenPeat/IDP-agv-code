@@ -1,10 +1,11 @@
 class Route:   
 
-    def __init__(self, startVertex, endVertex):
+    def __init__(self, verticesToVisit):
         self.graph = Graph()
-        self.vertexRoute, self.instructions = self.graph.plan_route(startVertex, endVertex)
+        
+        self.vertexRoute, self.instructions = self.graph.plan_route(verticesToVisit)
+
         self.currentPosition = self.vertexRoute.pop(0)
-        print(self.instructions)
     
     def get_currentPosition(self):
         return self.currentPosition
@@ -125,6 +126,8 @@ class Graph:
         
         self.addDirectionVertices("ILM", "PUL-1", 'r')
         self.addDirectionVertices("ILM", "PUR-1", 'l')
+        self.addDirectionVertices("PUL-1", "PUR-1", 'f')
+        self.addDirectionVertices("PUR-1", "PUL-1", 'f')
         
         # UPPER LEFT
         self.addDirectionVertices("IUM", "IUL-1", 'r')
@@ -250,10 +253,15 @@ class Graph:
 
         return vertexRoute      
             
-    def plan_route(self, startVertex, endVertex):
-        vertexRoute = self.dijkstra(startVertex, endVertex)
+    def plan_route(self, verticesToVisit):
+        vertexRoute = self.dijkstra(verticesToVisit[0], verticesToVisit[1])
+        for i in range(1, len(verticesToVisit)-1):
+            newVertexRoute = self.dijkstra(verticesToVisit[i], verticesToVisit[i+1])
+            newVertexRoute.pop(0)  # Get rid of first vertex in route since this was the last vertex in previous section
+            vertexRoute += newVertexRoute
+            
         instructions = []
-        if startVertex == "Start":
+        if verticesToVisit[0] == "Start":
             instructions = ['f']
         else:
             instructions = ['t']

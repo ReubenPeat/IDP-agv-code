@@ -4,6 +4,7 @@ from line_sensor import line_sensor_motor_control
 from motor_control import Motor_controller
 from route_planning import Route
 # from colour_sensor import block_identification
+from box_detector import detection_trigger
 
 #Set the button pin
 button_pin = 12
@@ -26,7 +27,7 @@ led = Pin(led_pin, Pin.OUT)
 # Plug red on the left, and orange on the right
 motor_controller = Motor_controller(4, 5, 7, 6)
 
-route = Route("Start", "PUL-2") # initialise route
+route = Route(["Start", "IR", "PLL-1", "PUR-1", "PUR-2", "PUL-2", "PUL-1", "PLR-1", "IB", "Start"]) # initialise the first route
 
 led.value(0)
 
