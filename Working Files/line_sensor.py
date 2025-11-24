@@ -40,6 +40,3 @@ def line_sensor_motor_control(motor_controller, route):
     # Approaching intersection - either of the front sensors detect something
     else:
         return route.intersection()
-        
-
-

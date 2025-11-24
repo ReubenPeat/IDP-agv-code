@@ -48,5 +48,8 @@ def detection_trigger(route, motor_controller):
             
             motor_controller.stop()
             
-            #pick up box using linear actuator code
+            return 'pick up box'
             
+            # pick up box using linear actuator code
+            
+            # call colour sensor to check that the block is on the forklift periodically during journey 
