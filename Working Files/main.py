@@ -58,10 +58,6 @@ while True:
         pass
     else:
 <<<<<<< Updated upstream
-        boxFound = detection_trigger(motor_controller, route)
-        if boxFound:
-            # Pick Up box using linear actuator code
-=======
         if !hasBox:
             boxFound = detectionTrigger(motor_controller, route)
             if boxFound:
@@ -84,7 +80,6 @@ while True:
                 motor_controller.rotate(180)
                 motor_controller.stop()                           # Reverse out and turn around ready to path back to the start
             
->>>>>>> Stashed changes
         else:
             if instruction == "forwards":
                 motor_controller.move_straight(90)       # Move forward until over the line

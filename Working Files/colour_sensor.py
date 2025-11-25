@@ -121,10 +121,6 @@ def block_identification():
             return "Red"
         elif red_ratio > 0.3 and red_ratio < 0.41 and green_ratio > 0.35 and green_ratio < 0.44 and blue_ratio > 0.22 and blue_ratio < 0.26:
 <<<<<<< Updated upstream
-            return 'Yellow'
-        elif red_ratio > 0.15 and red_ratio < 0.6 and green_ratio > 0.34 and green_ratio < 0.39 and blue_ratio > 0.31 and blue_ratio < 0.45:
-            return 'Green'
-=======
             return "Yellow"
         elif red_ratio > 0.15 and red_ratio < 0.4 and green_ratio > 0.34 and green_ratio < 0.39 and blue_ratio > 0.31 and blue_ratio < 0.45:
             return "Green"
