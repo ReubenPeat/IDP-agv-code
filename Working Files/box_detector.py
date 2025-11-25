@@ -7,7 +7,7 @@ from route_planning import Route
 
 # from map import nodes
 
-def detection_trigger(route, motor_controller):
+def detection_trigger(motor_controller, route):
     # config I2C Bus
     i2c_bus = I2C(id=0, sda=Pin(8), scl=Pin(9)) # I2C0 on GP8 & GP9
     # print(i2c_bus.scan())  # Get the address (nb 41=0x29, 82=0x52)
@@ -48,7 +48,9 @@ def detection_trigger(route, motor_controller):
             
             motor_controller.stop()
             
-            return 'pick up box'
+            return True # Return that we found a box, to tell the main code
+        
+    return False
             
             # pick up box using linear actuator code
             

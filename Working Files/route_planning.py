@@ -4,12 +4,20 @@ class Route:
         self.graph = Graph()
         
         self.vertexRoute, self.instructions = self.graph.plan_route(verticesToVisit)
+        # Calculate the route through the map visiting the vertices we need to
+        # vertexRoute is a list of the vertices we need to visit; and instructions is the list of turns the robot must make to get there
 
         self.currentPosition = self.vertexRoute.pop(0)
     
     def get_currentPosition(self):
         return self.currentPosition
     
+    def isOnUpperFloor(self):
+        if route.get_currentPosition()[1] == "U":
+            return True
+        else:
+            return False
+        
     # Called when we reach an intersection (when front sensors detect something) to check what to do
     def intersection(self):
         try:

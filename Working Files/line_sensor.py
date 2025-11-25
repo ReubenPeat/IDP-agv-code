@@ -35,7 +35,7 @@ def line_sensor_motor_control(motor_controller, route):
             motor_controller.set_left_motor_speed(65) #25
             motor_controller.set_right_motor_speed(95) # 55
             
-        return "pass"
+        return "No Instruction"
         
     # Approaching intersection - either of the front sensors detect something
     else:

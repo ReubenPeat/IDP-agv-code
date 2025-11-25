@@ -46,26 +46,30 @@ while True:
 
     # Line following control
     instruction = line_sensor_motor_control(motor_controller, route)
-    if instruction != "pass":
-        print(instruction)
-    if instruction == "pass":
+
+    if instruction == "No Instruction":
         pass
-    elif instruction == "forwards":
-        motor_controller.move_straight(90)       # Move forward until over the line
-        while line_sensor_outer_left.value() == 1 or line_sensor_outer_right.value() == 1:
-            pass
-    elif instruction == "backwards":
-        motor_controller.move_straight(-80)
-        sleep(1)
-    elif instruction == "turn":
-        motor_controller.rotate(180)
-    elif instruction == "left":
-        motor_controller.rotate(90, "left")      # Rotate 90deg anticlockwise
-    elif instruction == "right":
-        motor_controller.rotate(90, "right")     # Rotate 90deg clockwise
-    elif instruction == "stop":  
-        motor_controller.stop()
-        break
+    else:
+        boxFound = detectionTrigger(motor_controller, route)
+        if boxFound:
+            # Pick Up box
+        else:
+            if instruction == "forwards":
+                motor_controller.move_straight(90)       # Move forward until over the line
+                while line_sensor_outer_left.value() == 1 or line_sensor_outer_right.value() == 1:
+                    pass
+            elif instruction == "backwards":
+                motor_controller.move_straight(-80)
+                sleep(1)
+            elif instruction == "turn":
+                motor_controller.rotate(180)
+            elif instruction == "left":
+                motor_controller.rotate(90, "left")      # Rotate 90deg anticlockwise
+            elif instruction == "right":
+                motor_controller.rotate(90, "right")     # Rotate 90deg clockwise
+            elif instruction == "stop":  
+                motor_controller.stop()
+                break
 
 led.value(0)
 # Stop the motors when exiting
