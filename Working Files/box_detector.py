@@ -17,7 +17,7 @@ def detection_trigger(motor_controller, route):
     vl53l0.set_Vcsel_pulse_period(vl53l0.vcsel_period_type[0], 18)
     vl53l0.set_Vcsel_pulse_period(vl53l0.vcsel_period_type[1], 14)
     
-    # trigger box detection when robot reaches a line leading to a shelf
+    # trigger box detection when robot reaches a line potentially leading to a box
     checkNodes = ["ILL-1",  "ILL-2", "ILL-3", "ILL-4", "ILL-5", "ILL-6",
                   "ILR-1",  "ILR-2", "ILR-3", "ILR-4", "ILR-5", "ILR-6",
                   "IUL-1",  "IUL-2", "IUL-3", "IUL-4", "IUL-5", "IUL-6",
@@ -25,7 +25,7 @@ def detection_trigger(motor_controller, route):
     current_position = route.get_currentPosition()
                     
     if current_position in checkNodes:
-        # Start device
+        # Start TOF sensor
         vl53l0.start()
 
         distance = vl53l0.read()
