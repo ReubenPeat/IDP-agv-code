@@ -105,8 +105,7 @@ class TCS34725:
         # Green block:  r:0.15-0.40, g:0.34-0.39 b:0.31-0.45
         # Blue block:   r:0.07-0.36, g:0.30-0.35 b:0.34-0.61     
 
-except Exception as e:
-    print("Error:", e)
+
     
 def block_identification():
     try:
@@ -119,10 +118,22 @@ def block_identification():
         lux = sensor.calculate_lux(red, green, blue)
         red_ratio, green_ratio, blue_ratio = sensor.calculate_ratios(red, green, blue, clear)
         if red_ratio > 0.35 and red_ratio < 0.46 and green_ratio > 0.21 and green_ratio < 0.29 and blue_ratio > 0.26 and blue_ratio < 0.36:
-            return 'Red'
+            return "Red"
         elif red_ratio > 0.3 and red_ratio < 0.41 and green_ratio > 0.35 and green_ratio < 0.44 and blue_ratio > 0.22 and blue_ratio < 0.26:
+<<<<<<< Updated upstream
             return 'Yellow'
         elif red_ratio > 0.15 and red_ratio < 0.6 and green_ratio > 0.34 and green_ratio < 0.39 and blue_ratio > 0.31 and blue_ratio < 0.45:
             return 'Green'
+=======
+            return "Yellow"
+        elif red_ratio > 0.15 and red_ratio < 0.4 and green_ratio > 0.34 and green_ratio < 0.39 and blue_ratio > 0.31 and blue_ratio < 0.45:
+            return "Green"
+>>>>>>> Stashed changes
         elif red_ratio > 0.07 and red_ratio < 0.36 and green_ratio > 0.3 and green_ratio < 0.35 and blue_ratio > 0.34 and blue_ratio < 0.61:
-            return 'Blue'
+            return "Blue"
+        else:
+            return " "
+        
+    except Exception as e:
+        print("Error:", e)
+        return " "

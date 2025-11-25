@@ -27,7 +27,14 @@ led = Pin(led_pin, Pin.OUT)
 # Plug red on the left, and orange on the right
 motor_controller = Motor_controller(4, 5, 7, 6)
 
-route = Route(["Start", "IR", "PLL-1", "PUR-1", "PUR-2", "PUL-2", "PUL-1", "PLR-1", "IB", "Start"]) # initialise the first route
+verticesToCheck = ["IR",    "ILL-1", "ILL-2", "ILL-3", "ILL-4", "ILL-5", "ILL-6",
+                   "PUR-1", "IUR-1", "IUR-2", "IUR-3", "IUR-4", "IUR-5", "IUR-6",
+                   "PUL-2", "IUL-6", "IUL-5", "IUL-4", "IUL-3", "IUL-2", "IUL-1",
+                   "PLR-1", "ILR-6", "ILR-5", "ILR-4", "ILR-3", "ILR-2", "ILR-1"]    # We must visit all of these in order to check for blocks
+
+route = Route(["Start", verticesToCheck.pop(0)]) # initialise the first route
+hasBox = False
+
 
 led.value(0)
 
@@ -50,9 +57,34 @@ while True:
     if instruction == "No Instruction":
         pass
     else:
+<<<<<<< Updated upstream
         boxFound = detection_trigger(motor_controller, route)
         if boxFound:
             # Pick Up box using linear actuator code
+=======
+        if !hasBox:
+            boxFound = detectionTrigger(motor_controller, route)
+            if boxFound:
+                # Pick Up box
+                colour = block_identification()         # Identify the colour of the block picked up
+                hasBox = True
+                
+                while colour == " ":                    # Repeat until a colour is found
+                    colour = block_identification()
+                    sleep(0.1)
+                
+                intersectionPosition = route.get_currentPosition()
+                actualCurrentPosition = "B" + intersectionPosition[1:]  # Update the current position to the bay, since we moved there without telling the route object
+                
+                route = Route([actualCurrentPosition, colour])    # create a new route leading back to the start
+                instruction = route.intersection()                # Call intersection to tell the route object we will now turn around
+                
+                motor_controller.move_straight(-80)
+                sleep(1)
+                motor_controller.rotate(180)
+                motor_controller.stop()                           # Reverse out and turn around ready to path back to the start
+            
+>>>>>>> Stashed changes
         else:
             if instruction == "forwards":
                 motor_controller.move_straight(90)       # Move forward until over the line
@@ -70,6 +102,22 @@ while True:
             elif instruction == "stop":  
                 motor_controller.stop()
                 break
+            
+            if route.isAtEndOfRoute():
+                if hasBox:                  # If we have a box then drop it off!
+                    motor_controller.move_straight(80)
+                    sleep(0.5)
+                    # Drop off box
+                    hasBox = False
+                    instruction = route.intersection()                # Call intersection to tell the route object we will now turn around
+                    motor_controller.move_straight(-80)
+                    sleep(0.5)
+                    motor_controller.rotate(180)
+                    
+                if len(verticesToCheck) > 0:
+                    route = Route([route.get_currentPosition(), verticesToCheck.pop(0)])
+                else:
+                    route = Route([route.get_currentPosition(), "Start"])
 
 led.value(0)
 # Stop the motors when exiting

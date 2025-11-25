@@ -13,16 +13,22 @@ class Route:
         return self.currentPosition
     
     def isOnUpperFloor(self):
-        if route.get_currentPosition()[1] == "U":
+        if self.get_currentPosition()[1:2] == "U":
             return True
         else:
             return False
-        
+    
+    def isAtEndOfRoute(self):
+        if len(self.vertexRoute) = 0:
+            return True
+        else:
+            return False
+    
     # Called when we reach an intersection (when front sensors detect something) to check what to do
     def intersection(self):
         try:
             self.currentPosition = self.vertexRoute.pop(0)  # Now in new position, as given by the route
-            instruction = self.instructions.pop(0)     # Next instruction in the route
+            instruction = self.instructions.pop(0)          # Next instruction in the route
             if instruction == 'f':
                 return "forwards"
             elif instruction == 'b':
