@@ -51,7 +51,6 @@ def detection_trigger(motor_controller, route):
             return True # Return that we found a box, to tell the main code
         
     return False
+                        
+            # call colour sensor to check that the block is on the forklift periodically during journey
             
-            # pick up box using linear actuator code
-            
-            # call colour sensor to check that the block is on the forklift periodically during journey 

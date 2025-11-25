@@ -3,7 +3,7 @@ from utime import sleep
 from line_sensor import line_sensor_motor_control
 from motor_control import Motor_controller
 from route_planning import Route
-# from colour_sensor import block_identification
+from colour_sensor import block_identification
 from box_detector import detection_trigger
 
 #Set the button pin
@@ -50,9 +50,9 @@ while True:
     if instruction == "No Instruction":
         pass
     else:
-        boxFound = detectionTrigger(motor_controller, route)
+        boxFound = detection_trigger(motor_controller, route)
         if boxFound:
-            # Pick Up box
+            # Pick Up box using linear actuator code
         else:
             if instruction == "forwards":
                 motor_controller.move_straight(90)       # Move forward until over the line
