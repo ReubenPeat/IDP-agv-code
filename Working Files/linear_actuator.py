@@ -125,22 +125,4 @@ class Actuator:
 
     def go_full_extension(self):
         self.home_full_extension()
-
-
-def main():
-    actuator = Actuator(dirPin=0, PWMPin=1)
-
-    # Home at startup
-    actuator.home_full_extension()
-
-
-    actuator.top_floor_pick_and_carry()
-    actuator.drop_off()
-
-    actuator.go_full_extension()
-    actuator.bottom_floor_pick_and_carry()
-    actuator.drop_off()
-
-
-if __name__ == "__main__":
-    main()
+        
