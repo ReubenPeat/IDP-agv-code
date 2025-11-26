@@ -72,15 +72,11 @@ while True:
                 if route.isOnUpperFloor() == True:
                     # TOP FLOOR sequence
                     actuator.top_floor_pick_and_carry()
-                    # (your drive code moves robot to drop-off)
-                    actuator.top_floor_drop_off()
                     
                 else:
                     # BOTTOM FLOOR sequence
                     actuator.go_full_extension()        
                     actuator.bottom_floor_pick_and_carry()
-                    # drive code moves robot to drop off
-                    actuator.bottom_floor_drop_off()
                     
                 colour = block_identification()         # Identify the colour of the block picked up
                 hasBox = True
@@ -122,7 +118,10 @@ while True:
                 if hasBox:                  # If we have a box then drop it off!
                     motor_controller.move_straight(80)
                     sleep(0.5)
+                    
                     # Drop off box
+                    actuator.drop_off()
+                    
                     hasBox = False
                     instruction = route.intersection()                # Call intersection to tell the route object we will now turn around
                     motor_controller.move_straight(-80)
