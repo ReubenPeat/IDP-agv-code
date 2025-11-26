@@ -74,8 +74,7 @@ while True:
                     actuator.top_floor_pick_and_carry()
                     
                 else:
-                    # BOTTOM FLOOR sequence
-                    actuator.go_full_extension()        
+                    # BOTTOM FLOOR sequence       
                     actuator.bottom_floor_pick_and_carry()
                     
                 colour = block_identification()         # Identify the colour of the block picked up
@@ -117,15 +116,15 @@ while True:
             if route.isAtEndOfRoute():
                 if hasBox:                  # If we have a box then drop it off!
                     motor_controller.move_straight(80)
-                    sleep(0.5)
+                    sleep(1)
                     
                     # Drop off box
                     actuator.drop_off()
-                    
+                    actuator.home_full_extension()
                     hasBox = False
                     instruction = route.intersection()                # Call intersection to tell the route object we will now turn around
                     motor_controller.move_straight(-80)
-                    sleep(0.5)
+                    sleep(1)
                     motor_controller.rotate(180)
                     
                 if len(verticesToCheck) > 0:
