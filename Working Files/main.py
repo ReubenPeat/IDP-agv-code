@@ -9,7 +9,8 @@ from box_detector import detection_trigger
 #Set the button pin
 button_pin = 12
 button = Pin(button_pin, Pin.IN, Pin.PULL_DOWN)
-  
+
+#Set line sensor pins
 line_sensor_outer_left_pin = 14
 line_sensor_outer_right_pin = 15
 line_sensor_inner_left_pin = 16
@@ -22,6 +23,12 @@ line_sensor_inner_right = Pin(line_sensor_inner_right_pin, Pin.IN, Pin.PULL_DOWN
 #Set the LED pin and configuration
 led_pin = 22
 led = Pin(led_pin, Pin.OUT)
+
+# Initialise actuator pins
+actuator = Actuator(dirPin=0, PWMPin=1)
+
+# Actuator default
+actuator.home_full_extension()
 
 # Plug in left motor to slot 3, and right motor to slot 4
 # Plug red on the left, and orange on the right
@@ -57,11 +64,24 @@ while True:
     if instruction == "No Instruction":
         pass
     else:
-<<<<<<< Updated upstream
         if !hasBox:
             boxFound = detectionTrigger(motor_controller, route)
             if boxFound:
-                # Pick Up box
+                
+                # Pick up box
+                if route.isOnUpperFloor() == True:
+                    # TOP FLOOR sequence
+                    actuator.top_floor_pick_and_carry()
+                    # (your drive code moves robot to drop-off)
+                    actuator.top_floor_drop_off()
+                    
+                else:
+                    # BOTTOM FLOOR sequence
+                    actuator.go_full_extension()        
+                    actuator.bottom_floor_pick_and_carry()
+                    # drive code moves robot to drop off
+                    actuator.bottom_floor_drop_off()
+                    
                 colour = block_identification()         # Identify the colour of the block picked up
                 hasBox = True
                 
