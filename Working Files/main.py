@@ -3,12 +3,13 @@ from utime import sleep
 from line_sensor import line_sensor_motor_control
 from motor_control import Motor_controller
 from route_planning import Route
+from route_planning import Graph
 from colour_sensor import block_identification
 from box_detector import detection_trigger
 from linear_actuator import Actuator
 
 #Set the button pin
-#button_pin = 12
+#button_pin = 18
 #button = Pin(button_pin, Pin.IN, Pin.PULL_DOWN)
 
 #Set line sensor pins
@@ -40,7 +41,7 @@ verticesToCheck = ["IR",    "ILL-1", "ILL-2", "ILL-3", "ILL-4", "ILL-5", "ILL-6"
                    "PUL-2", "IUL-6", "IUL-5", "IUL-4", "IUL-3", "IUL-2", "IUL-1",
                    "PLR-1", "ILR-6", "ILR-5", "ILR-4", "ILR-3", "ILR-2", "ILR-1"]    # We must visit all of these in order to check for blocks
 
-route = Route(["Start", verticesToCheck.pop(0)]) # initialise the first route
+route = Route(graph, ["Start", verticesToCheck.pop(0)]) # initialise the first route
 hasBox = False
 
 
@@ -93,8 +94,8 @@ while True:
                 intersectionPosition = route.get_currentPosition()
                 actualCurrentPosition = "B" + intersectionPosition[1:]  # Update the current position to the bay, since we moved there without telling the route object
                 
-                route = Route([actualCurrentPosition, colour])    # create a new route leading back to the start
-                instruction = route.intersection()                # Call intersection to tell the route object we will now turn around
+                route = Route(graph, [actualCurrentPosition, colour])   # create a new route leading back to the start
+                instruction = route.intersection()                      # Call intersection to tell the route object we will now turn around
                 
                 motor_controller.move_straight(-80)
                 sleep(1)
@@ -134,9 +135,9 @@ while True:
                 motor_controller.rotate(180)
                 
             if len(verticesToCheck) > 0:
-                route = Route([route.get_currentPosition(), verticesToCheck.pop(0)])
+                route = Route(graph, [route.get_currentPosition(), verticesToCheck.pop(0)])
             else:
-                route = Route([route.get_currentPosition(), "Start"])
+                route = Route(graph, [route.get_currentPosition(), "Start"])
 
 led.value(0)
 # Stop the motors when exiting

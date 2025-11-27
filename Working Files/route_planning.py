@@ -1,7 +1,6 @@
 class Route:   
 
-    def __init__(self, verticesToVisit):
-        self.graph = Graph()
+    def __init__(self, graph, verticesToVisit):
         
         self.vertexRoute, self.instructions = self.graph.plan_route(verticesToVisit)
         # Calculate the route through the map visiting the vertices we need to
