@@ -102,23 +102,23 @@ while True:
                 motor_controller.rotate(180)
                 motor_controller.stop()                           # Reverse out and turn around ready to path back to the start
             
-        #else:
-        if instruction == "forwards":
-            motor_controller.move_straight(90)       # Move forward until over the line
-            while line_sensor_outer_left.value() == 1 or line_sensor_outer_right.value() == 1:
-                pass
-        elif instruction == "backwards":
-            motor_controller.move_straight(-80)
-            sleep(1)
-        elif instruction == "turn":
-            motor_controller.rotate(180)
-        elif instruction == "left":
-            motor_controller.rotate(90, "left")      # Rotate 90deg anticlockwise
-        elif instruction == "right":
-            motor_controller.rotate(90, "right")     # Rotate 90deg clockwise
-        elif instruction == "stop":  
-            motor_controller.stop()
-            break
+        else:
+            if instruction == "forwards":
+                motor_controller.move_straight(90)       # Move forward until over the line
+                while line_sensor_outer_left.value() == 1 or line_sensor_outer_right.value() == 1:
+                    pass
+            elif instruction == "backwards":
+                motor_controller.move_straight(-80)
+                sleep(1)
+            elif instruction == "turn":
+                motor_controller.rotate(180)
+            elif instruction == "left":
+                motor_controller.rotate(90, "left")      # Rotate 90deg anticlockwise
+            elif instruction == "right":
+                motor_controller.rotate(90, "right")     # Rotate 90deg clockwise
+            elif instruction == "stop":  
+                motor_controller.stop()
+                break
         
         if route.isAtEndOfRoute():
             if hasBox:                  # If we have a box then drop it off!
