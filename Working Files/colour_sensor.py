@@ -110,21 +110,24 @@ class TCS34725:
 def block_identification():
     try:
         # Initialize I2C (adjust pins for your board)
-        i2c = I2C(1, scl=Pin(2), sda=Pin(3), freq=400000)
+        enable_CS_pin = 11
+        enable_CS = Pin(enable_CS_pin, Pin.OUT)
+        enable_CS.value(1)
+        i2c = I2C(1, scl=Pin(15), sda=Pin(14), freq=400000)
         print(i2c.scan())
         sensor = TCS34725(i2c)
         clear, red, green, blue = sensor.read_raw()
         temp = sensor.calculate_color_temperature(red, green, blue)
         lux = sensor.calculate_lux(red, green, blue)
         red_ratio, green_ratio, blue_ratio = sensor.calculate_ratios(red, green, blue, clear)
+        sleep(0.5)
+        enable_CS.value(0)
         if red_ratio > 0.35 and red_ratio < 0.46 and green_ratio > 0.21 and green_ratio < 0.29 and blue_ratio > 0.26 and blue_ratio < 0.36:
             return "Red"
         elif red_ratio > 0.3 and red_ratio < 0.41 and green_ratio > 0.35 and green_ratio < 0.44 and blue_ratio > 0.22 and blue_ratio < 0.26:
-<<<<<<< Updated upstream
             return "Yellow"
         elif red_ratio > 0.15 and red_ratio < 0.4 and green_ratio > 0.34 and green_ratio < 0.39 and blue_ratio > 0.31 and blue_ratio < 0.45:
             return "Green"
->>>>>>> Stashed changes
         elif red_ratio > 0.07 and red_ratio < 0.36 and green_ratio > 0.3 and green_ratio < 0.35 and blue_ratio > 0.34 and blue_ratio < 0.61:
             return "Blue"
         else:

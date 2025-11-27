@@ -4,10 +4,10 @@ from motor_control import Motor_controller
 from route_planning import Route
 
 #Set the line sensor pins
-line_sensor_outer_left_pin = 14
-line_sensor_outer_right_pin = 15
-line_sensor_inner_left_pin = 16
-line_sensor_inner_right_pin = 17
+line_sensor_outer_left_pin = 3
+line_sensor_outer_right_pin = 0
+line_sensor_inner_left_pin = 2
+line_sensor_inner_right_pin = 1
 line_sensor_outer_left = Pin(line_sensor_outer_left_pin, Pin.IN, Pin.PULL_DOWN)
 line_sensor_outer_right = Pin(line_sensor_outer_right_pin, Pin.IN, Pin.PULL_DOWN)
 line_sensor_inner_left = Pin(line_sensor_inner_left_pin, Pin.IN, Pin.PULL_DOWN)
@@ -28,12 +28,12 @@ def line_sensor_motor_control(motor_controller, route):
         
         #realign if either sensor is outside the white line
         elif line_sensor_inner_right.value() == 0:
-            motor_controller.set_right_motor_speed(65) #25
-            motor_controller.set_left_motor_speed(95) #55
+            motor_controller.set_right_motor_speed(95) #25
+            motor_controller.set_left_motor_speed(65) #55
         
         elif line_sensor_inner_left.value() == 0:
-            motor_controller.set_left_motor_speed(65) #25
-            motor_controller.set_right_motor_speed(95) # 55
+            motor_controller.set_left_motor_speed(95) #25
+            motor_controller.set_right_motor_speed(65) # 55
             
         return "No Instruction"
         
