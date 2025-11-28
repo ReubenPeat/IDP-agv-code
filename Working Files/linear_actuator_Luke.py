@@ -4,6 +4,7 @@ from utime import sleep
 FullStrokeTime = 8.02
 FullStrokeDist = 50.0   
 
+defaultHeight = 10.0
 CarryHeight = 21.0
 BottomFloorPickupHeight = 22.0
 TopFloorPickupHeight = 4.0
@@ -88,12 +89,16 @@ class Actuator:
         
     def bottomFloorPickUp(self):
         self.setHeight(BottomFloorPickupHeight)
+    
+    def defaultHeight(self):
+        self.setHeight(defaultHeight)
 
     def pickUp(self):
         self.moveUp(4.0)
     
     def carry(self):
-        self.setHeight(CarryHeight)
+        if self.currentHeight != CarryHeight:
+            self.setHeight(CarryHeight)
 
     def dropOff(self):
         self.fullExtension()

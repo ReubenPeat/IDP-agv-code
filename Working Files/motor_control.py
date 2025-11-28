@@ -40,17 +40,20 @@ class Motor_controller:
             return     # If already moving at this speed don't bother changing!
         self.set_speeds(self.left_motor_speed, right_speed)
         
-    def rotate(self, angle=180, direction="left"):
-        self.stop()
-        sleep(0.2)
+    def turn(self, angle=90, direction="left"):
         if direction == "left":
-            self.set_speeds(20, 90)
+            self.set_speeds(231, 90)
         else:
-            self.set_speeds(90, 20)
+            self.set_speeds(90, 17)
             
         sleep(0.018*angle)
         
         self.move_straight(50)
+        
+    def rotate180(self):
+        self.stop()
+        sleep(0.2)
+        self.set_speeds(-80, 80)
         
     def decrease_left_motor_speed(self, change_in_speed=20):
         new_left_speed = self.left_motor_speed - change_in_speed

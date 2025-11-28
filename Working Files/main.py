@@ -6,7 +6,7 @@ from route_planning import Route
 from route_planning import Graph
 from colour_sensor import block_identification
 from box_detector import detection_trigger
-from linear_actuator import Actuator
+from linear_actuator_Luke import Actuator
 
 #Set the button pin
 button_pin = 18
@@ -30,7 +30,7 @@ led = Pin(led_pin, Pin.OUT)
 actuator = Actuator(dirPin=0, PWMPin=1)
 
 # Actuator default
-#actuator.home_full_extension()
+actuator.fullExtension()
 
 # Plug in left motor to slot 3, and right motor to slot 4
 # Plug red on the left, and orange on the right
@@ -47,13 +47,7 @@ route = defaultRoute
 hasBox = False
 
 def pick_up_box(route, graph, actuator):
-    if route.isOnUpperFloor() == True:
-        # TOP FLOOR sequence
-        actuator.top_floor_pick_and_carry()
-        
-    else:
-        # BOTTOM FLOOR sequence       
-        actuator.bottom_floor_pick_and_carry()
+    actuator.pickUp()
         
     colour = block_identification()         # Identify the colour of the block picked up
     hasBox = True
@@ -78,8 +72,8 @@ def drop_off_box(route, graph, actuator):
     sleep(1)
     
     # Drop off box
-    actuator.drop_off()
-    actuator.home_full_extension()
+    actuator.dropOff()
+    actuator.fullExtension()
     hasBox = False
     instruction = route.intersection()                # Call intersection to tell the route object we will now turn around
     motor_controller.move_straight(-80)
@@ -90,8 +84,9 @@ def drop_off_box(route, graph, actuator):
 led.value(0)
 
 while button.value() == 0:
-    pass
+    print(0)
 while button.value() == 1:
+    print(1)
     sleep(0.1)
 
 
@@ -118,8 +113,15 @@ while True:
     if instruction == "No Instruction":
         pass
     else:
+        boxFound = False
         if hasBox==False:
             if route.get_currentPosition() == verticesToCheck[0]:
+                if route.isOnUpperFloor() == True:
+                    # TOP FLOOR sequence
+                    actuator.topFloorPickUp()
+                else:
+                    # BOTTOM FLOOR sequence       
+                    actuator.bottomFloorPickUp()
                 boxFound = detection_trigger(motor_controller, route)
                 verticesToCheck.pop(0)
         if boxFound:
@@ -133,11 +135,11 @@ while True:
                 motor_controller.move_straight(-80)
                 sleep(1)
             elif instruction == "turn":
-                motor_controller.rotate(180)
+                motor_controller.rotate180()
             elif instruction == "left":
-                motor_controller.rotate(90, "left")      # Rotate 90deg anticlockwise
+                motor_controller.turn(90, "left")      # Rotate 90deg anticlockwise
             elif instruction == "right":
-                motor_controller.rotate(90, "right")     # Rotate 90deg clockwise
+                motor_controller.turn(90, "right")     # Rotate 90deg clockwise
             elif instruction == "stop":  
                 motor_controller.stop()
                 break
