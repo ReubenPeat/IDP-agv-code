@@ -45,6 +45,46 @@ verticesToCheck = ["IR",    "ILL-1", "ILL-2", "ILL-3", "ILL-4", "ILL-5", "ILL-6"
 route = Route(graph, ["Start", verticesToCheck.pop(0)]) # initialise the first route
 hasBox = False
 
+def pick_up_box(route, graph, actuator):
+    if route.isOnUpperFloor() == True:
+        # TOP FLOOR sequence
+        actuator.top_floor_pick_and_carry()
+        
+    else:
+        # BOTTOM FLOOR sequence       
+        actuator.bottom_floor_pick_and_carry()
+        
+    colour = block_identification()         # Identify the colour of the block picked up
+    hasBox = True
+    
+    while colour == " ":                    # Repeat until a colour is found
+        colour = block_identification()
+        sleep(0.1)
+    
+    intersectionPosition = route.get_currentPosition()
+    actualCurrentPosition = "B" + intersectionPosition[1:]  # Update the current position to the bay, since we moved there without telling the route object
+    
+    route = Route(graph, [actualCurrentPosition, colour])   # create a new route leading back to the start
+    instruction = route.intersection()                      # Call intersection to tell the route object we will now turn around
+    
+    motor_controller.move_straight(-80)
+    sleep(1)
+    motor_controller.rotate(180)
+    motor_controller.stop()                           # Reverse out and turn around ready to path back to the start
+
+def drop_off_box(route, graph, actuator):
+    motor_controller.move_straight(80)
+    sleep(1)
+    
+    # Drop off box
+    actuator.drop_off()
+    actuator.home_full_extension()
+    hasBox = False
+    instruction = route.intersection()                # Call intersection to tell the route object we will now turn around
+    motor_controller.move_straight(-80)
+    sleep(1)
+    motor_controller.rotate(180)
+      
 
 led.value(0)
 
@@ -77,38 +117,10 @@ while True:
     if instruction == "No Instruction":
         pass
     else:
-        
         if hasBox==False:
             boxFound = detection_trigger(motor_controller, route)
-            if boxFound:
-                
-                # Pick up box
-                if route.isOnUpperFloor() == True:
-                    # TOP FLOOR sequence
-                    actuator.top_floor_pick_and_carry()
-                    
-                else:
-                    # BOTTOM FLOOR sequence       
-                    actuator.bottom_floor_pick_and_carry()
-                    
-                colour = block_identification()         # Identify the colour of the block picked up
-                hasBox = True
-                
-                while colour == " ":                    # Repeat until a colour is found
-                    colour = block_identification()
-                    sleep(0.1)
-                
-                intersectionPosition = route.get_currentPosition()
-                actualCurrentPosition = "B" + intersectionPosition[1:]  # Update the current position to the bay, since we moved there without telling the route object
-                
-                route = Route(graph, [actualCurrentPosition, colour])   # create a new route leading back to the start
-                instruction = route.intersection()                      # Call intersection to tell the route object we will now turn around
-                
-                motor_controller.move_straight(-80)
-                sleep(1)
-                motor_controller.rotate(180)
-                motor_controller.stop()                           # Reverse out and turn around ready to path back to the start
-            
+        if boxFound:
+            pick_up_box(route, graph, actuator) 
         else:
             if instruction == "forwards":
                 motor_controller.move_straight(90)       # Move forward until over the line
@@ -129,18 +141,7 @@ while True:
         
         if route.isAtEndOfRoute():
             if hasBox:                  # If we have a box then drop it off!
-                motor_controller.move_straight(80)
-                sleep(1)
-                
-                # Drop off box
-                actuator.drop_off()
-                actuator.home_full_extension()
-                hasBox = False
-                instruction = route.intersection()                # Call intersection to tell the route object we will now turn around
-                motor_controller.move_straight(-80)
-                sleep(1)
-                motor_controller.rotate(180)
-                
+                drop_off_box(route, graph, actuator)
             if len(verticesToCheck) > 0:
                 route = Route(graph, [route.get_currentPosition(), verticesToCheck.pop(0)])
             else:

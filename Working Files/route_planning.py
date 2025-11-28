@@ -28,6 +28,7 @@ class Route:
         try:
             self.currentPosition = self.vertexRoute.pop(0)  # Now in new position, as given by the route
             instruction = self.instructions.pop(0)          # Next instruction in the route
+            print(instruction)
             if instruction == 'f':
                 return "forwards"
             elif instruction == 'b':
