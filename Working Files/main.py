@@ -37,12 +37,13 @@ actuator = Actuator(dirPin=0, PWMPin=1)
 motor_controller = Motor_controller(4, 5, 7, 6)
 graph = Graph()
 
-verticesToCheck = ["IR",    "ILL-1", "ILL-2", "ILL-3", "ILL-4", "ILL-5", "ILL-6",
-                   "PUR-1", "IUR-1", "IUR-2", "IUR-3", "IUR-4", "IUR-5", "IUR-6",
-                   "PUL-2", "IUL-6", "IUL-5", "IUL-4", "IUL-3", "IUL-2", "IUL-1",
-                   "PLR-1", "ILR-6", "ILR-5", "ILR-4", "ILR-3", "ILR-2", "ILR-1"]    # We must visit all of these in order to check for blocks
+verticesToCheck = ["ILL-1", "ILL-2", "ILL-3", "ILL-4", "ILL-5", "ILL-6",
+                   "IUR-1", "IUR-2", "IUR-3", "IUR-4", "IUR-5", "IUR-6",
+                   "IUL-6", "IUL-5", "IUL-4", "IUL-3", "IUL-2", "IUL-1",
+                   "ILR-6", "ILR-5", "ILR-4", "ILR-3", "ILR-2", "ILR-1"]    # We must visit all of these in order to check for blocks
 
-route = Route(graph, ["Start", verticesToCheck.pop(0)]) # initialise the first route
+defaultRoute = Route(graph, ["Start", "IR", "PLL-1", "PUR-1", "PUR-2", "PUL-2", "PUL-1", "PLR-1", "IB", "Start"]) # initialise the first route
+route = defaultRoute
 hasBox = False
 
 def pick_up_box(route, graph, actuator):
@@ -118,7 +119,9 @@ while True:
         pass
     else:
         if hasBox==False:
-            boxFound = detection_trigger(motor_controller, route)
+            if route.get_currentPosition() == verticesToCheck[0]:
+                boxFound = detection_trigger(motor_controller, route)
+                verticesToCheck.pop(0)
         if boxFound:
             pick_up_box(route, graph, actuator) 
         else:
@@ -143,9 +146,7 @@ while True:
             if hasBox:                  # If we have a box then drop it off!
                 drop_off_box(route, graph, actuator)
             if len(verticesToCheck) > 0:
-                route = Route(graph, [route.get_currentPosition(), verticesToCheck.pop(0)])
-            else:
-                route = Route(graph, [route.get_currentPosition(), "Start"])
+                route = defaultRoute
 
 led.value(0)
 # Stop the motors when exiting
