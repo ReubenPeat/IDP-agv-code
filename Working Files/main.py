@@ -9,14 +9,14 @@ from box_detector import detection_trigger
 from linear_actuator import Actuator
 
 #Set the button pin
-#button_pin = 18
-#button = Pin(button_pin, Pin.IN, Pin.PULL_DOWN)
+button_pin = 18
+button = Pin(button_pin, Pin.IN, Pin.PULL_DOWN)
 
 #Set line sensor pins
 line_sensor_outer_left_pin = 3
-line_sensor_outer_right_pin = 0
+line_sensor_outer_right_pin = 9
 line_sensor_inner_left_pin = 2
-line_sensor_inner_right_pin = 1
+line_sensor_inner_right_pin = 8
 line_sensor_outer_left = Pin(line_sensor_outer_left_pin, Pin.IN, Pin.PULL_DOWN)
 line_sensor_outer_right = Pin(line_sensor_outer_right_pin, Pin.IN, Pin.PULL_DOWN)
 line_sensor_inner_left = Pin(line_sensor_inner_left_pin, Pin.IN, Pin.PULL_DOWN)
@@ -35,6 +35,7 @@ actuator.home_full_extension()
 # Plug in left motor to slot 3, and right motor to slot 4
 # Plug red on the left, and orange on the right
 motor_controller = Motor_controller(4, 5, 7, 6)
+graph = Graph()
 
 verticesToCheck = ["IR",    "ILL-1", "ILL-2", "ILL-3", "ILL-4", "ILL-5", "ILL-6",
                    "PUR-1", "IUR-1", "IUR-2", "IUR-3", "IUR-4", "IUR-5", "IUR-6",
@@ -47,18 +48,23 @@ hasBox = False
 
 led.value(0)
 
-#while button.value() == 0:
- #   pass
-#while button.value() == 1:
- #   sleep(0.1)
+while button.value() == 0:
+    pass
+while button.value() == 1:
+    sleep(0.1)
 
-#led.value(1)
+led.value(1)
+
+
+while line_sensor_inner_right.value() == 0 or line_sensor_inner_left.value() == 0:
+    motor_controller.move_straight()        # Initially, we will be in the start box - no line to follow, so go forward until you find it
+    
 
 # Main loop: run until button pressed again
 while True:
     # If button pressed again, exit
-    #if button.value() == 1:
-     #   break
+    if button.value() == 1:
+        break
     if route.get_currentPosition() == "Start":
         led.value(0)
     else:

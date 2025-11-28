@@ -5,9 +5,9 @@ from route_planning import Route
 
 #Set the line sensor pins
 line_sensor_outer_left_pin = 3
-line_sensor_outer_right_pin = 0
+line_sensor_outer_right_pin = 9
 line_sensor_inner_left_pin = 2
-line_sensor_inner_right_pin = 1
+line_sensor_inner_right_pin = 8
 line_sensor_outer_left = Pin(line_sensor_outer_left_pin, Pin.IN, Pin.PULL_DOWN)
 line_sensor_outer_right = Pin(line_sensor_outer_right_pin, Pin.IN, Pin.PULL_DOWN)
 line_sensor_inner_left = Pin(line_sensor_inner_left_pin, Pin.IN, Pin.PULL_DOWN)
