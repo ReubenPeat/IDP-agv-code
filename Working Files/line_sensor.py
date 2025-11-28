@@ -29,11 +29,11 @@ def line_sensor_motor_control(motor_controller, route):
         #realign if either sensor is outside the white line
         elif line_sensor_inner_right.value() == 0:
             motor_controller.set_right_motor_speed(95) #25
-            motor_controller.set_left_motor_speed(65) #55
+            motor_controller.set_left_motor_speed(80) #55
         
         elif line_sensor_inner_left.value() == 0:
             motor_controller.set_left_motor_speed(95) #25
-            motor_controller.set_right_motor_speed(65) # 55
+            motor_controller.set_right_motor_speed(80) # 55
             
         return "No Instruction"
         
