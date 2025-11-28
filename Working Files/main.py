@@ -30,7 +30,7 @@ led = Pin(led_pin, Pin.OUT)
 actuator = Actuator(dirPin=0, PWMPin=1)
 
 # Actuator default
-actuator.home_full_extension()
+#actuator.home_full_extension()
 
 # Plug in left motor to slot 3, and right motor to slot 4
 # Plug red on the left, and orange on the right
@@ -53,12 +53,13 @@ while button.value() == 0:
 while button.value() == 1:
     sleep(0.1)
 
-led.value(1)
 
 
 while line_sensor_inner_right.value() == 0 or line_sensor_inner_left.value() == 0:
     motor_controller.move_straight()        # Initially, we will be in the start box - no line to follow, so go forward until you find it
     
+
+led.value(0)
 
 # Main loop: run until button pressed again
 while True:

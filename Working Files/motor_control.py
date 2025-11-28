@@ -26,12 +26,18 @@ class Motor_controller:
         self.right_motor_speed = right_speed
     
     def move_straight(self, speed=50):
+        if self.left_motor_speed == speed and self.right_motor_speed == speed:
+            return     # If already moving straight don't bother changing!
         self.set_speeds(speed, speed)
         
     def set_left_motor_speed(self, left_speed=50):
+        if self.left_motor_speed == left_speed:
+            return     # If already moving at this speed don't bother changing!
         self.set_speeds(left_speed, self.right_motor_speed)
         
     def set_right_motor_speed(self, right_speed=50):
+        if self.right_motor_speed == right_speed:
+            return     # If already moving at this speed don't bother changing!
         self.set_speeds(self.left_motor_speed, right_speed)
         
     def rotate(self, angle=180, direction="left"):

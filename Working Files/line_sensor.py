@@ -18,7 +18,7 @@ def line_sensor_motor_control(motor_controller, route):
 
     #no upcoming corners/turns
     if line_sensor_outer_left.value() == 0 and line_sensor_outer_right.value() == 0:
-        
+
         #forward movement when both sensors are inside the white line
         if line_sensor_inner_left.value() == 1 and line_sensor_inner_right.value() == 1:
             motor_controller.move_straight(95) #55
@@ -29,11 +29,11 @@ def line_sensor_motor_control(motor_controller, route):
         #realign if either sensor is outside the white line
         elif line_sensor_inner_right.value() == 0:
             motor_controller.set_right_motor_speed(95) #25
-            motor_controller.set_left_motor_speed(65) #55
+            motor_controller.set_left_motor_speed(80) #55
         
         elif line_sensor_inner_left.value() == 0:
             motor_controller.set_left_motor_speed(95) #25
-            motor_controller.set_right_motor_speed(65) # 55
+            motor_controller.set_right_motor_speed(80) # 55
             
         return "No Instruction"
         
