@@ -44,7 +44,8 @@ verticesToCheck = ["ILL-1", "ILL-2", "ILL-3", "ILL-4", "ILL-5", "ILL-6",
                    "IUL-6", "IUL-5", "IUL-4", "IUL-3", "IUL-2", "IUL-1",
                    "ILR-6", "ILR-5", "ILR-4", "ILR-3", "ILR-2", "ILR-1"]    # We must visit all of these in order to check for blocks
 
-defaultRoute = Route(graph, ["Start", "IR", "PLL-1", "PUR-1", "PUR-2", "PUL-2", "PUL-1", "PLR-1", "IB", "Start"]) # initialise the first route
+defaultRoute = Route(graph, ["Start", "IR", "PLL-1", "PLR-1", "IB", "Start"]) # initialise the first route
+# Full route: ["Start", "IR", "PLL-1", "PUR-1", "PUR-2", "PUL-2", "PUL-1", "PLR-1", "IB", "Start"]
 route = defaultRoute
 print(route.instructions)
 hasBox = False

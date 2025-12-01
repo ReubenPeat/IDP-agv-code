@@ -53,7 +53,7 @@ class Motor_controller:
     def rotate180(self):
         self.stop()
         sleep(0.2)
-        self.set_speeds(-80, 80)
+        self.set_speeds(-80, 40)
         sleep(3.24)
         self.stop()
         sleep(0.2)

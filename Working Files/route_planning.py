@@ -3,7 +3,6 @@ class Route:
     def __init__(self, graph, verticesToVisit):
         
         self.vertexRoute, self.instructions = graph.plan_route(verticesToVisit)
-        self.instructions = ['t', 't']
         # Calculate the route through the map visiting the vertices we need to
         # vertexRoute is a list of the vertices we need to visit; and instructions is the list of turns the robot must make to get there
         self.currentPosition = verticesToVisit[0]
