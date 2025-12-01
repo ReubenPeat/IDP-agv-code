@@ -136,3 +136,6 @@ def block_identification():
     except Exception as e:
         print("Error:", e)
         return " "
+while True:
+    print(block_identification())
+    sleep(0.5)

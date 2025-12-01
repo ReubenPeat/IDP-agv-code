@@ -7,23 +7,15 @@ from route_planning import Route, Graph
 
 # from map import nodes
 
-def detection_trigger(motor_controller, route):
-    # config I2C Bus
-    i2c_bus = I2C(id=0, sda=Pin(16), scl=Pin(17)) # I2C0 on GP8 & GP9
-    print(i2c_bus.scan())  # Get the address (nb 41=0x29, 82=0x52)
-    
-    # Setup time of flight sensor
-    vl53l0 = VL53L0X(i2c_bus)
-    vl53l0.set_Vcsel_pulse_period(vl53l0.vcsel_period_type[0], 18)
-    vl53l0.set_Vcsel_pulse_period(vl53l0.vcsel_period_type[1], 14)
-    
+def detection_trigger(motor_controller, route, vl53l0):
+        
     # trigger box detection when robot reaches a line potentially leading to a box
     checkNodes = ["ILL-1",  "ILL-2", "ILL-3", "ILL-4", "ILL-5", "ILL-6",
                   "ILR-1",  "ILR-2", "ILR-3", "ILR-4", "ILR-5", "ILR-6",
                   "IUL-1",  "IUL-2", "IUL-3", "IUL-4", "IUL-5", "IUL-6",
                   "IUR-1",  "IUR-2", "IUR-3", "IUR-4", "IUR-5", "IUR-6"]
     current_position = route.get_currentPosition()
-                    
+    current_position = "ILL-1"              
     if current_position in checkNodes:
         # Start TOF sensor
         vl53l0.start()
@@ -38,26 +30,36 @@ def detection_trigger(motor_controller, route):
         # turn to collect box
         else:
             vl53l0.stop()         # Stop TOF sensor
-            motor_controller.turn(90, "right")     # Rotate 90deg clockwise to face box
+            #motor_controller.turn(90, "right")     # Rotate 90deg clockwise to face box
             
             # move forward until the line break
-            motor_controller.move_straight(40)        
+            #motor_controller.move_straight(40)        
             
-            while line_sensor.line_sensor_inner_left.value() == 1 or line_sensor.line_sensor_inner_right.value() == 1:
-                line_sensor.line_sensor_motor_control(motor_controller, route)
+            #while line_sensor.line_sensor_inner_left.value() == 1 or line_sensor.line_sensor_inner_right.value() == 1:
+                #line_sensor_motor_control(motor_controller, route)
             
+<<<<<<< Updated upstream
             sleep(0.05)
             
             motor_controller.stop()
+=======
+            #motor_controller.stop()
+>>>>>>> Stashed changes
             
             return True # Return that we found a box, to tell the main code
         
     return False
-                        
-            # call colour sensor to check that the block is on the forklift periodically during journey
+
+# configure I2C Bus for distance sensor
+i2c_bus = I2C(id=0, sda=Pin(16), scl=Pin(17)) # I2C0 on GP8 & GP9
+print(i2c_bus.scan())  # Get the address (nb 41=0x29, 82=0x52)
+
+vl53l0 = VL53L0X(i2c_bus)
+vl53l0.set_Vcsel_pulse_period(vl53l0.vcsel_period_type[0], 18)
+vl53l0.set_Vcsel_pulse_period(vl53l0.vcsel_period_type[1], 14)
 motor_controller = Motor_controller(4, 5, 7, 6)
 graph = Graph()
 route = Route(graph, ["ILL-1", "ILL-2"])
 while True:
-    print(detection_trigger(motor_controller, route))
+    print(detection_trigger(motor_controller, route, vl53l0))
     sleep(0.5)

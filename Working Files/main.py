@@ -28,6 +28,18 @@ led = Pin(led_pin, Pin.OUT)
 
 led.value(0)
 
+# configure I2C Bus for distance sensor
+i2c_bus = I2C(id=0, sda=Pin(16), scl=Pin(17)) # I2C0 on GP8 & GP9
+print(i2c_bus.scan())  # Get the address (nb 41=0x29, 82=0x52)
+    
+# Setup time of flight sensor
+vl53l0 = VL53L0X(i2c_bus)
+vl53l0.set_Vcsel_pulse_period(vl53l0.vcsel_period_type[0], 18)
+vl53l0.set_Vcsel_pulse_period(vl53l0.vcsel_period_type[1], 14)
+vl53l0.start()
+print(vl53l0.read())
+vl53l0.stop()
+
 # Initialise actuator pins
 actuator = Actuator(dirPin=0, PWMPin=1)
 
