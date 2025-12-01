@@ -3,7 +3,7 @@ from libs.VL53L0X.VL53L0X import VL53L0X
 from utime import sleep
 from motor_control import Motor_controller
 from line_sensor import line_sensor_motor_control
-from route_planning import Route
+from route_planning import Route, Graph
 
 # from map import nodes
 
@@ -29,16 +29,16 @@ def detection_trigger(motor_controller, route):
         vl53l0.start()
 
         distance = vl53l0.read()
-        
+        print(distance)
         # continue if there is no box
-        if distance > 350:
+        if distance > 300:
             vl53l0.stop()         # Stop TOF sensor
-            motor_controller.move_straight(90)
+            #motor_controller.move_straight(90)
             
         # turn to collect box
         else:
             vl53l0.stop()         # Stop TOF sensor
-            motor_controller.rotate(90, "right")     # Rotate 90deg clockwise to face box
+            motor_controller.turn(90, "right")     # Rotate 90deg clockwise to face box
             
             # move forward until the line break
             motor_controller.move_straight(40)        
@@ -53,4 +53,9 @@ def detection_trigger(motor_controller, route):
     return False
                         
             # call colour sensor to check that the block is on the forklift periodically during journey
-            
+motor_controller = Motor_controller(4, 5, 7, 6)
+graph = Graph()
+route = Route(graph, ["ILL-1", "ILL-2"])
+while True:
+    print(detection_trigger(motor_controller, route))
+    sleep(0.5)
