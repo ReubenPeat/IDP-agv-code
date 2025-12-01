@@ -65,6 +65,7 @@ class TCS34725:
         red = self._read16(REG_RDATAL)
         green = self._read16(REG_GDATAL)
         blue = self._read16(REG_BDATAL)
+        print(clear)
         return clear, red, green, blue
 
     def calculate_color_temperature(self, r, g, b):
@@ -86,7 +87,17 @@ class TCS34725:
         return int((-0.32466 * r) + (1.57837 * g) + (-0.73191 * b))
     
     def calculate_ratios(self, r, g, b, clear):
-        return [r / clear, g / clear, b / clear] 
+        return [r / clear, g / clear, b / clear]
+    
+    def read_stable(sensor, samples=5):
+        c = r = g = b = 0
+        for i in range(samples):
+            clear, red, green, blue = sensor.read_raw()
+            c += clear
+            r += red
+            g += green
+            b += blue
+        return c/samples, r/samples, g/samples, b/samples
 
 # -------------------------
 # Main program
@@ -109,19 +120,34 @@ class TCS34725:
     
 def block_identification():
     try:
+        #enable_CS_pin = 11
+        #enable_CS = Pin(enable_CS_pin, Pin.OUT)
+        #enable_CS.value(1)
+        
         # Initialize I2C (adjust pins for your board)
-        enable_CS_pin = 11
-        enable_CS = Pin(enable_CS_pin, Pin.OUT)
-        enable_CS.value(1)
         i2c = I2C(1, scl=Pin(15), sda=Pin(14), freq=400000)
         print(i2c.scan())
         sensor = TCS34725(i2c)
-        clear, red, green, blue = sensor.read_raw()
-        temp = sensor.calculate_color_temperature(red, green, blue)
-        lux = sensor.calculate_lux(red, green, blue)
-        red_ratio, green_ratio, blue_ratio = sensor.calculate_ratios(red, green, blue, clear)
-        sleep(0.5)
-        enable_CS.value(0)
+        sleep(0.7)
+        
+        # Read multiple stable values
+        clear, red, green, blue = read_stable(sensor, samples=5)
+
+        if clear == 0:
+            return "No Light"
+
+        red_ratio  = red  / clear
+        green_ratio = green / clear
+        blue_ratio  = blue / clear
+        
+        #clear, red, green, blue = sensor.read_raw()
+        #temp = sensor.calculate_color_temperature(red, green, blue)
+        #lux = sensor.calculate_lux(red, green, blue)
+        #red_ratio, green_ratio, blue_ratio = sensor.calculate_ratios(red, green, blue, clear)
+        #sleep(0.5)
+        #enable_CS.value(0)
+        
+        # Colour classification
         if red_ratio > 0.35 and red_ratio < 0.46 and green_ratio > 0.21 and green_ratio < 0.29 and blue_ratio > 0.26 and blue_ratio < 0.36:
             return "Red"
         elif red_ratio > 0.3 and red_ratio < 0.41 and green_ratio > 0.35 and green_ratio < 0.44 and blue_ratio > 0.22 and blue_ratio < 0.26:
@@ -131,8 +157,12 @@ def block_identification():
         elif red_ratio > 0.07 and red_ratio < 0.36 and green_ratio > 0.3 and green_ratio < 0.35 and blue_ratio > 0.34 and blue_ratio < 0.61:
             return "Blue"
         else:
-            return " "
+            return "Unknown"
         
     except Exception as e:
         print("Error:", e)
         return " "
+
+while True:
+    print(block_identification())
+    sleep(0.5)
