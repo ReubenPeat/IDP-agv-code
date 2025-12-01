@@ -46,6 +46,8 @@ def detection_trigger(motor_controller, route):
             while line_sensor.line_sensor_inner_left.value() == 1 or line_sensor.line_sensor_inner_right.value() == 1:
                 line_sensor.line_sensor_motor_control(motor_controller, route)
             
+            sleep(0.05)
+            
             motor_controller.stop()
             
             return True # Return that we found a box, to tell the main code
