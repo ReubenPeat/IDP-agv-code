@@ -42,18 +42,21 @@ class Motor_controller:
         
     def turn(self, angle=90, direction="left"):
         if direction == "left":
-            self.set_speeds(231, 90)
+            self.set_speeds(16, 90)
+            sleep(0.018 * angle)
         else:
-            self.set_speeds(90, 17)
-            
-        sleep(0.018*angle)
-        
+            self.set_speeds(90, 16)
+            sleep(0.013 * angle)
+                        
         self.move_straight(50)
         
     def rotate180(self):
         self.stop()
         sleep(0.2)
         self.set_speeds(-80, 80)
+        sleep(3.24)
+        self.stop()
+        sleep(0.2)
         
     def decrease_left_motor_speed(self, change_in_speed=20):
         new_left_speed = self.left_motor_speed - change_in_speed

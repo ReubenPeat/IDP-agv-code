@@ -3,11 +3,11 @@ class Route:
     def __init__(self, graph, verticesToVisit):
         
         self.vertexRoute, self.instructions = graph.plan_route(verticesToVisit)
+        self.instructions = ['t', 't']
         # Calculate the route through the map visiting the vertices we need to
         # vertexRoute is a list of the vertices we need to visit; and instructions is the list of turns the robot must make to get there
-
-        self.currentPosition = self.vertexRoute.pop(0)
-    
+        self.currentPosition = verticesToVisit[0]
+        
     def get_currentPosition(self):
         return self.currentPosition
     
@@ -27,6 +27,7 @@ class Route:
     def intersection(self):
         try:
             self.currentPosition = self.vertexRoute.pop(0)  # Now in new position, as given by the route
+            print(self.currentPosition)
             instruction = self.instructions.pop(0)          # Next instruction in the route
             print(instruction)
             if instruction == 'f':

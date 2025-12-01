@@ -26,11 +26,13 @@ line_sensor_inner_right = Pin(line_sensor_inner_right_pin, Pin.IN, Pin.PULL_DOWN
 led_pin = 26
 led = Pin(led_pin, Pin.OUT)
 
+led.value(0)
+
 # Initialise actuator pins
 actuator = Actuator(dirPin=0, PWMPin=1)
 
 # Actuator default
-actuator.fullExtension()
+#actuator.fullRetraction()
 
 # Plug in left motor to slot 3, and right motor to slot 4
 # Plug red on the left, and orange on the right
@@ -44,6 +46,7 @@ verticesToCheck = ["ILL-1", "ILL-2", "ILL-3", "ILL-4", "ILL-5", "ILL-6",
 
 defaultRoute = Route(graph, ["Start", "IR", "PLL-1", "PUR-1", "PUR-2", "PUL-2", "PUL-1", "PLR-1", "IB", "Start"]) # initialise the first route
 route = defaultRoute
+print(route.instructions)
 hasBox = False
 
 def pick_up_box(route, graph, actuator):
@@ -79,14 +82,10 @@ def drop_off_box(route, graph, actuator):
     motor_controller.move_straight(-80)
     sleep(1)
     motor_controller.rotate(180)
-      
-
-led.value(0)
 
 while button.value() == 0:
-    print(0)
+    pass
 while button.value() == 1:
-    print(1)
     sleep(0.1)
 
 
@@ -109,13 +108,15 @@ while True:
 
     # Line following control
     instruction = line_sensor_motor_control(motor_controller, route)
-
+    
     if instruction == "No Instruction":
         pass
     else:
+        print(instruction)
         boxFound = False
         if hasBox==False:
             if route.get_currentPosition() == verticesToCheck[0]:
+                motor_controller.stop()
                 if route.isOnUpperFloor() == True:
                     # TOP FLOOR sequence
                     actuator.topFloorPickUp()
@@ -124,13 +125,15 @@ while True:
                     actuator.bottomFloorPickUp()
                 boxFound = detection_trigger(motor_controller, route)
                 verticesToCheck.pop(0)
-        if boxFound:
+                print(boxFound)
+        if boxFound == True:
             pick_up_box(route, graph, actuator) 
         else:
             if instruction == "forwards":
                 motor_controller.move_straight(90)       # Move forward until over the line
                 while line_sensor_outer_left.value() == 1 or line_sensor_outer_right.value() == 1:
                     pass
+                sleep(0.1)
             elif instruction == "backwards":
                 motor_controller.move_straight(-80)
                 sleep(1)

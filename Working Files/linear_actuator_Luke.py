@@ -40,7 +40,6 @@ class Actuator:
         self.pwm.freq(1000)
         self.stop()
         
-        self.fullExtension()
         self.currentHeight = 0.0
 
     def run(self, direction, speed_percent):
@@ -57,6 +56,13 @@ class Actuator:
         self.stop()
         self.currentHeight = 0.0
         print("Fully Extended")
+        
+    def fullRetraction(self):
+        self.run(DirRetract, 80)
+        sleep(FullStrokeTime)
+        self.stop()
+        self.currentHeight = FullStrokeDist
+        print("Fully Retracted")
     
     def moveUp(self, dist):
         time = distToTime(dist)

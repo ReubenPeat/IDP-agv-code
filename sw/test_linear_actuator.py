@@ -18,7 +18,7 @@ def test_actuator1():
 
     while True:
         print("Extending quickly")
-        actuator1.set(dir = 0, speed=100)
+        actuator1.set(dir = 1, speed=100)
         sleep(5)  # nb we don't know when this has finished without another means
 
         print("Retracing slowly")
