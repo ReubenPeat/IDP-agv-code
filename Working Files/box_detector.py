@@ -39,7 +39,7 @@ def detection_trigger(motor_controller, route, vl53l0):
                 #line_sensor_motor_control(motor_controller, route)
 
             sleep(0.05)
-            
+
             motor_controller.stop()
             
             return True # Return that we found a box, to tell the main code

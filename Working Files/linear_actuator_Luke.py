@@ -40,6 +40,7 @@ class Actuator:
         self.pwm.freq(1000)
         self.stop()
         
+        self.fullExtension()
         self.currentHeight = 0.0
 
     def run(self, direction, speed_percent):

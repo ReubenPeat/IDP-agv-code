@@ -43,9 +43,6 @@ vl53l0.stop()
 # Initialise actuator pins
 actuator = Actuator(dirPin=0, PWMPin=1)
 
-# Actuator default
-#actuator.fullRetraction()
-
 # Plug in left motor to slot 3, and right motor to slot 4
 # Plug red on the left, and orange on the right
 motor_controller = Motor_controller(4, 5, 7, 6)
