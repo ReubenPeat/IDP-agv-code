@@ -47,6 +47,7 @@ def detection_trigger(motor_controller, route, vl53l0):
         
     return False
 
+"""
 # configure I2C Bus for distance sensor
 i2c_bus = I2C(id=0, sda=Pin(16), scl=Pin(17)) # I2C0 on GP8 & GP9
 print(i2c_bus.scan())  # Get the address (nb 41=0x29, 82=0x52)
@@ -60,3 +61,4 @@ route = Route(graph, ["ILL-1", "ILL-2"])
 while True:
     print(detection_trigger(motor_controller, route, vl53l0))
     sleep(0.5)
+"""

@@ -52,14 +52,14 @@ class Actuator:
         self.pwm.duty_u16(0)
 
     def fullExtension(self):
-        self.run(DirExtend, 80)
+        self.run(DirExtend, 60)
         sleep(FullStrokeTime)
         self.stop()
         self.currentHeight = 0.0
         print("Fully Extended")
         
     def fullRetraction(self):
-        self.run(DirRetract, 80)
+        self.run(DirRetract, 60)
         sleep(FullStrokeTime)
         self.stop()
         self.currentHeight = FullStrokeDist
@@ -67,13 +67,13 @@ class Actuator:
     
     def moveUp(self, dist):
         time = distToTime(dist)
-        self.run(DirRetract, 80)
+        self.run(DirRetract, 60)
         sleep(time)
         self.stop()
     
     def moveDown(self, dist):
         time = distToTime(dist)
-        self.run(DirExtend, 80)
+        self.run(DirExtend, 60)
         sleep(time)
         self.stop()
     

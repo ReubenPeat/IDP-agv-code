@@ -118,25 +118,20 @@ class TCS34725:
 
 
     
-def block_identification(enable_CS, CS_sensor, i2c):
+def block_identification(enable_CS):
     try:
         enable_CS.value(1)
-        clear, red, green, blue = CS_sensor.read_raw()
-        
-        # Initialize I2C (adjust pins for your board)
+        sleep(0.1)
         i2c = I2C(1, scl=Pin(15), sda=Pin(14), freq=400000)
         sensor = TCS34725(i2c)
-
-        print(sensor.i2c)
-        print(clear)
-        red_ratio, green_ratio, blue_ratio = CS_sensor.calculate_ratios(red, green, blue, clear)
-        print(red_ratio, green_ratio, blue_ratio)
+        print(i2c.scan()) 
         sleep(0.5)
-        enable_CS.value(0)
-        sleep(0.7)
-        
         # Read multiple stable values
-        clear, red, green, blue = read_stable(sensor, samples=5)
+        clear, red, green, blue = sensor.read_stable(samples=5)
+        sensor.disable()
+        enable_CS.value(0)
+        print(clear)
+        print(red)
 
         if clear == 0:
             return "No Light"
@@ -144,6 +139,9 @@ def block_identification(enable_CS, CS_sensor, i2c):
         red_ratio  = red  / clear
         green_ratio = green / clear
         blue_ratio  = blue / clear
+        print(red_ratio)
+        print(green_ratio)
+        print(blue_ratio)
         
         #clear, red, green, blue = sensor.read_raw()
         #temp = sensor.calculate_color_temperature(red, green, blue)
@@ -153,31 +151,29 @@ def block_identification(enable_CS, CS_sensor, i2c):
         #enable_CS.value(0)
         
         # Colour classification
-        if red_ratio > 0.35 and red_ratio < 0.46 and green_ratio > 0.21 and green_ratio < 0.29 and blue_ratio > 0.26 and blue_ratio < 0.36:
+        if red_ratio > 0.35 and red_ratio < 0.6 and green_ratio > 0.21 and green_ratio < 0.34 and blue_ratio > 0.26 and blue_ratio < 0.36:
             return "Red"
-        elif red_ratio > 0.3 and red_ratio < 0.41 and green_ratio > 0.35 and green_ratio < 0.44 and blue_ratio > 0.22 and blue_ratio < 0.26:
+        elif red_ratio > 0.3 and red_ratio < 0.46 and green_ratio > 0.35 and green_ratio < 0.44 and blue_ratio > 0.22 and blue_ratio < 0.29:
             return "Yellow"
-        elif red_ratio > 0.15 and red_ratio < 0.4 and green_ratio > 0.34 and green_ratio < 0.39 and blue_ratio > 0.31 and blue_ratio < 0.45:
+        elif red_ratio > 0.15 and red_ratio < 0.4 and green_ratio > 0.35 and green_ratio < 0.39 and blue_ratio > 0.31 and blue_ratio < 0.45:
             return "Green"
         elif red_ratio > 0.07 and red_ratio < 0.36 and green_ratio > 0.3 and green_ratio < 0.35 and blue_ratio > 0.34 and blue_ratio < 0.61:
             return "Blue"
         else:
-            return "Unknown"
+            return "Blue"
         
     except Exception as e:
         print("Error:", e)
         return " "
     
-
+"""
 while True:
     # Initialize I2C (adjust pins for your board)
     enable_CS_pin = 11
     enable_CS = Pin(enable_CS_pin, Pin.OUT)
     enable_CS.value(0)
-    i2c = I2C(1, scl=Pin(15), sda=Pin(14), freq=400000)
-    print(i2c.scan())
-    sleep(0.2)
-    sensor = TCS34725(i2c)
     
-    print(block_identification(enable_CS, sensor, i2c))
-    sleep(2)
+    sleep(0.2)
+    print(block_identification(enable_CS))
+    sleep(5)
+"""

@@ -1,4 +1,5 @@
-from machine import Pin
+from machine import Pin, I2C
+from libs.VL53L0X.VL53L0X import VL53L0X
 from utime import sleep
 from line_sensor import line_sensor_motor_control
 from motor_control import Motor_controller
@@ -41,15 +42,16 @@ vl53l0.start()
 print(vl53l0.read())
 vl53l0.stop()        # Take a reading to check for errors
 
-# Setup colour sensor - but don't turn it on
+# Setup colour sensor enable pin - but don't turn it on
 enable_CS_pin = 11
 enable_CS = Pin(enable_CS_pin, Pin.OUT)
 enable_CS.value(0)
-i2c_CS = I2C(1, scl=Pin(15), sda=Pin(14), freq=400000)
-CS_sensor = TCS34725(i2c_CS)
 
 # Initialise actuator pins
 actuator = Actuator(dirPin=0, PWMPin=1)
+print("Check 1")
+actuator.setHeight(22)
+print("Check 2")
 
 # Plug in left motor to slot 3, and right motor to slot 4
 # Plug red on the left, and orange on the right
@@ -70,11 +72,11 @@ hasBox = False
 def pick_up_box(route, graph, actuator):
     actuator.pickUp()
         
-    colour = block_identification()         # Identify the colour of the block picked up
+    colour = block_identification(enable_CS)         # Identify the colour of the block picked up
     hasBox = True
     
     while colour == " ":                    # Repeat until a colour is found
-        colour = block_identification()
+        colour = block_identification(enable_CS)
         sleep(0.1)
     
     intersectionPosition = route.get_currentPosition()
@@ -85,7 +87,7 @@ def pick_up_box(route, graph, actuator):
     
     motor_controller.move_straight(-80)
     sleep(1)
-    motor_controller.rotate(180)
+    motor_controller.rotate180()
     motor_controller.stop()                           # Reverse out and turn around ready to path back to the start
 
 def drop_off_box(route, graph, actuator):
@@ -99,7 +101,7 @@ def drop_off_box(route, graph, actuator):
     instruction = route.intersection()                # Call intersection to tell the route object we will now turn around
     motor_controller.move_straight(-80)
     sleep(1)
-    motor_controller.rotate(180)
+    motor_controller.rotate180()
 
 while button.value() == 0:
     pass
@@ -135,13 +137,15 @@ while True:
         if hasBox==False:
             if route.get_currentPosition() == verticesToCheck[0]:
                 motor_controller.stop()
+                print("HI")
                 if route.isOnUpperFloor() == True:
                     # TOP FLOOR sequence
                     actuator.topFloorPickUp()
                 else:
                     # BOTTOM FLOOR sequence       
                     actuator.bottomFloorPickUp()
-                boxFound = detection_trigger(motor_controller, route)
+                print("Checking for box")
+                boxFound = detection_trigger(motor_controller, route, vl53l0)
                 verticesToCheck.pop(0)
                 print(boxFound)
         if boxFound == True:
