@@ -48,10 +48,10 @@ enable_CS = Pin(enable_CS_pin, Pin.OUT)
 enable_CS.value(0)
 
 # Initialise actuator pins
-actuator = Actuator(dirPin=0, PWMPin=1)
-print("Check 1")
-actuator.setHeight(22)
-print("Check 2")
+#actuator = Actuator(dirPin=0, PWMPin=1)
+#print("Check 1")
+#actuator.setHeight(22)
+#print("Check 2")
 
 # Plug in left motor to slot 3, and right motor to slot 4
 # Plug red on the left, and orange on the right
@@ -70,7 +70,7 @@ print(route.instructions)
 hasBox = False
 
 def pick_up_box(route, graph, actuator):
-    actuator.pickUp()
+    #actuator.pickUp()
         
     colour = block_identification(enable_CS)         # Identify the colour of the block picked up
     hasBox = True
@@ -95,8 +95,8 @@ def drop_off_box(route, graph, actuator):
     sleep(1)
     
     # Drop off box
-    actuator.dropOff()
-    actuator.fullExtension()
+    #actuator.dropOff()
+    #actuator.fullExtension()
     hasBox = False
     instruction = route.intersection()                # Call intersection to tell the route object we will now turn around
     motor_controller.move_straight(-80)
@@ -140,10 +140,12 @@ while True:
                 print("HI")
                 if route.isOnUpperFloor() == True:
                     # TOP FLOOR sequence
-                    actuator.topFloorPickUp()
+                    #actuator.topFloorPickUp()
+                    pass
                 else:
                     # BOTTOM FLOOR sequence       
-                    actuator.bottomFloorPickUp()
+                    #actuator.bottomFloorPickUp()
+                    pass
                 print("Checking for box")
                 boxFound = detection_trigger(motor_controller, route, vl53l0)
                 verticesToCheck.pop(0)

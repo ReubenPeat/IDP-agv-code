@@ -1,7 +1,7 @@
 from machine import Pin, PWM
 from utime import sleep
 
-FullStrokeTime = 8.02
+FullStrokeTime = 10.7
 FullStrokeDist = 50.0   
 
 defaultHeight = 10.0
@@ -110,11 +110,11 @@ class Actuator:
     def dropOff(self):
         self.fullExtension()
 
-
+'''
 def main():
     actuator = Actuator(dirPin=0, PWMPin=1)
 
-    # Home at startup
+    Home at startup
     actuator.fullExtension()
 
 
@@ -139,3 +139,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+#while True:
+ #   actuator.setHeight(22)'''

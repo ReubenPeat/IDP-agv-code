@@ -25,18 +25,24 @@ def detection_trigger(motor_controller, route, vl53l0):
         # continue if there is no box
         if distance > 300:
             vl53l0.stop()         # Stop TOF sensor
-            #motor_controller.move_straight(90)
+            motor_controller.move_straight(90)
             
         # turn to collect box
         else:
             vl53l0.stop()         # Stop TOF sensor
-            #motor_controller.turn(90, "right")     # Rotate 90deg clockwise to face box
+            motor_controller.stop()
+            sleep(0.1)
+            motor_controller.move_straight(-50)
+            sleep(1.3)
+            motor_controller.stop()
+            sleep(0.1)
+            motor_controller.turn(90, "right")     # Rotate 90deg clockwise to face box
             
             # move forward until the line break
-            #motor_controller.move_straight(40)        
+            motor_controller.move_straight(40)        
             
-            #while line_sensor.line_sensor_inner_left.value() == 1 or line_sensor.line_sensor_inner_right.value() == 1:
-                #line_sensor_motor_control(motor_controller, route)
+            while line_sensor.line_sensor_inner_left.value() == 1 or line_sensor.line_sensor_inner_right.value() == 1:
+                line_sensor_motor_control(motor_controller, route)
 
             sleep(0.05)
 
