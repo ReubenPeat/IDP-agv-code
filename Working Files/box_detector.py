@@ -5,7 +5,11 @@ from motor_control import Motor_controller
 from line_sensor import line_sensor_motor_control
 from route_planning import Route, Graph
 
-# from map import nodes
+line_sensor_inner_left_pin = 2
+line_sensor_inner_right_pin = 8
+
+line_sensor_inner_left = Pin(line_sensor_inner_left_pin, Pin.IN, Pin.PULL_DOWN)
+line_sensor_inner_right = Pin(line_sensor_inner_right_pin, Pin.IN, Pin.PULL_DOWN)
 
 def detection_trigger(motor_controller, route, vl53l0):
         
@@ -15,13 +19,16 @@ def detection_trigger(motor_controller, route, vl53l0):
                   "IUL-1",  "IUL-2", "IUL-3", "IUL-4", "IUL-5", "IUL-6",
                   "IUR-1",  "IUR-2", "IUR-3", "IUR-4", "IUR-5", "IUR-6"]
     current_position = route.get_currentPosition()
-    current_position = "ILL-1"              
+                 
     if current_position in checkNodes:
         # Start TOF sensor
         vl53l0.start()
-
-        distance = vl53l0.read()
-        print(distance)
+        
+        distanceReadings = 0
+        for i in range(0,10):
+            distanceReadings += vl53l0.read()
+            sleep(0.1)
+        distance = distanceReadings / 10
         # continue if there is no box
         if distance > 300:
             vl53l0.stop()         # Stop TOF sensor
@@ -33,7 +40,7 @@ def detection_trigger(motor_controller, route, vl53l0):
             motor_controller.stop()
             sleep(0.1)
             motor_controller.move_straight(-50)
-            sleep(1.3)
+            sleep(1.2)
             motor_controller.stop()
             sleep(0.1)
             motor_controller.turn(90, "right")     # Rotate 90deg clockwise to face box
@@ -41,14 +48,28 @@ def detection_trigger(motor_controller, route, vl53l0):
             # move forward until the line break
             motor_controller.move_straight(40)        
             
-            while line_sensor.line_sensor_inner_left.value() == 1 or line_sensor.line_sensor_inner_right.value() == 1:
-                line_sensor_motor_control(motor_controller, route)
-
-            sleep(0.05)
-
-            motor_controller.stop()
-
+            while line_sensor_inner_left.value() == 1 or line_sensor_inner_right.value() == 1:
+                #forward movement when both sensors are inside the white line
+                if line_sensor_inner_left.value() == 1 and line_sensor_inner_right.value() == 1:
+                    motor_controller.move_straight(55) #55
             
+                elif line_sensor_inner_left.value() == 0 and line_sensor_inner_right.value() == 0:
+                    break
+        
+                #realign if either sensor is outside the white line
+                elif line_sensor_inner_right.value() == 0:
+                    motor_controller.set_right_motor_speed(55) 
+                    motor_controller.set_left_motor_speed(25) 
+                
+                elif line_sensor_inner_left.value() == 0:
+                    motor_controller.set_left_motor_speed(55) 
+                    motor_controller.set_right_motor_speed(25) 
+           
+            motor_controller.move_straight(40)
+            sleep(0.2)
+            motor_controller.stop()
+            sleep(1)
+    
             return True # Return that we found a box, to tell the main code
         
     return False

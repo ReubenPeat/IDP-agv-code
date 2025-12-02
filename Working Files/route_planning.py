@@ -1,15 +1,14 @@
 class Route:   
 
     def __init__(self, graph, verticesToVisit):
-        #verticesToVisit = ["ILL-1", "PLL-1"]
         self.vertexRoute, self.instructions = graph.plan_route(verticesToVisit)
-        #self.instructions = ['f'] * 6
         # Calculate the route through the map visiting the vertices we need to
         # vertexRoute is a list of the vertices we need to visit; and instructions is the list of turns the robot must make to get there
         self.currentPosition = verticesToVisit[0]
+        self.previousPosition = " "
         
     def get_currentPosition(self):
-        return self.currentPosition
+        return self.currentPosition + ""
     
     def isOnUpperFloor(self):
         if self.get_currentPosition()[1:2] == "U":
@@ -26,10 +25,9 @@ class Route:
     # Called when we reach an intersection (when front sensors detect something) to check what to do
     def intersection(self):
         try:
+            self.previousPosition = self.get_currentPosition()
             self.currentPosition = self.vertexRoute.pop(0)  # Now in new position, as given by the route
-            print(self.currentPosition)
             instruction = self.instructions.pop(0)          # Next instruction in the route
-            print(instruction)
             if instruction == 'f':
                 return "forwards"
             elif instruction == 'b':
@@ -137,6 +135,8 @@ class Graph:
         self.addEdgeVertices("PLR-2", "ILM", 102)
         
         # MIDDLE
+        self.addDirectionVertices("PLL-2", "PLR-2", 'f')
+        self.addDirectionVertices("PLR-2", "PLL-2", 'f')
         self.addEdgeVertices("ILM", "IUM", 137)
         
         self.addDirectionVertices("ILM", "PUL-1", 'r')
@@ -225,6 +225,8 @@ class Graph:
         self.addDirection(index1, index2, direction)
         
     def dijkstra(self, startVertex, endVertex):
+        print(startVertex)
+        print(endVertex)
         minDistances = {vertex:10e8 for vertex in self.get_Vertices()}       # Set up to the minimum distances from the start vertex, initially basically infinite
         previousVertex = {vertex:"" for vertex in self.get_Vertices()}       # Set up the previous vertex dictionary, the previous vertex in the route
         verticesLeftToVisit = self.get_Vertices()                            # Set up the list of vertices left to visit - finished when this is emptied

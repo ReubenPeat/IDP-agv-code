@@ -31,7 +31,7 @@ led.value(0)
 
 # configure I2C Bus for distance sensor
 i2c_ToF = I2C(id=0, sda=Pin(16), scl=Pin(17)) # I2C0 on GP8 & GP9
-print(i2c_ToF.scan())  # Get the address (nb 41=0x29, 82=0x52)
+#print(i2c_ToF.scan())  # Get the address (nb 41=0x29, 82=0x52)
     
 # Setup time of flight sensor
 vl53l0 = VL53L0X(i2c_ToF)
@@ -48,10 +48,9 @@ enable_CS = Pin(enable_CS_pin, Pin.OUT)
 enable_CS.value(0)
 
 # Initialise actuator pins
-#actuator = Actuator(dirPin=0, PWMPin=1)
-#print("Check 1")
-#actuator.setHeight(22)
-#print("Check 2")
+actuator = Actuator(dirPin=0, PWMPin=1)
+actuator.bottomFloorPickUp()
+
 
 # Plug in left motor to slot 3, and right motor to slot 4
 # Plug red on the left, and orange on the right
@@ -66,27 +65,35 @@ verticesToCheck = ["ILL-1", "ILL-2", "ILL-3", "ILL-4", "ILL-5", "ILL-6",
 defaultRoute = Route(graph, ["Start", "IR", "PLL-1", "PLR-1", "IB", "Start"]) # initialise the first route
 # Full route: ["Start", "IR", "PLL-1", "PUR-1", "PUR-2", "PUL-2", "PUL-1", "PLR-1", "IB", "Start"]
 route = defaultRoute
-print(route.instructions)
 hasBox = False
 
 def pick_up_box(route, graph, actuator):
-    #actuator.pickUp()
+    actuator.pickUp()
         
     colour = block_identification(enable_CS)         # Identify the colour of the block picked up
     hasBox = True
     
-    while colour == " ":                    # Repeat until a colour is found
-        colour = block_identification(enable_CS)
-        sleep(0.1)
+    for i in range(0, 10):
+        if colour != " ":
+            colour = block_identification(enable_CS)
+            sleep(0.2)
+            if colour != " " and i == 9:
+                colour = "Red"
+            print(colour)
+        else:
+            break
+        
+        
     
-    intersectionPosition = route.get_currentPosition()
+    intersectionPosition = route.previousPosition
     actualCurrentPosition = "B" + intersectionPosition[1:]  # Update the current position to the bay, since we moved there without telling the route object
-    
+    print(actualCurrentPosition)
     route = Route(graph, [actualCurrentPosition, colour])   # create a new route leading back to the start
     instruction = route.intersection()                      # Call intersection to tell the route object we will now turn around
     
     motor_controller.move_straight(-80)
-    sleep(1)
+    sleep(4)
+    motor_controller.stop()
     motor_controller.rotate180()
     motor_controller.stop()                           # Reverse out and turn around ready to path back to the start
 
@@ -95,14 +102,14 @@ def drop_off_box(route, graph, actuator):
     sleep(1)
     
     # Drop off box
-    #actuator.dropOff()
-    #actuator.fullExtension()
+    actuator.dropOff()
     hasBox = False
     instruction = route.intersection()                # Call intersection to tell the route object we will now turn around
     motor_controller.move_straight(-80)
     sleep(1)
     motor_controller.rotate180()
 
+print("Ready")
 while button.value() == 0:
     pass
 while button.value() == 1:
@@ -132,19 +139,18 @@ while True:
     if instruction == "No Instruction":
         pass
     else:
-        print(instruction)
         boxFound = False
         if hasBox==False:
             if route.get_currentPosition() == verticesToCheck[0]:
                 motor_controller.stop()
-                print("HI")
+                sleep(0.5)
                 if route.isOnUpperFloor() == True:
                     # TOP FLOOR sequence
-                    #actuator.topFloorPickUp()
+                    actuator.topFloorPickUp()
                     pass
                 else:
                     # BOTTOM FLOOR sequence       
-                    #actuator.bottomFloorPickUp()
+                    actuator.bottomFloorPickUp()
                     pass
                 print("Checking for box")
                 boxFound = detection_trigger(motor_controller, route, vl53l0)

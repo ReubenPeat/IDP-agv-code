@@ -12,16 +12,16 @@ class Motor_controller:
         
     def set_speeds(self, left_speed, right_speed):
         if left_speed >= 0:
-            self.left_Motor.Forward(left_speed)
+            self.left_Motor.Forward(speed=left_speed)
         else:
-            self.left_Motor.Reverse(left_speed)
+            self.left_Motor.Reverse(speed=left_speed)
             
         self.left_motor_speed = left_speed
         
         if right_speed >= 0:
-            self.right_Motor.Forward(right_speed)
+            self.right_Motor.Forward(speed=right_speed)
         else:
-            self.right_Motor.Reverse(right_speed)
+            self.right_Motor.Reverse(speed=right_speed)
             
         self.right_motor_speed = right_speed
     
@@ -46,15 +46,15 @@ class Motor_controller:
             sleep(0.018 * angle)
         else:
             self.set_speeds(90, 16)
-            sleep(0.013 * angle)
+            sleep(0.014 * angle)
                         
         self.move_straight(50)
         
     def rotate180(self):
         self.stop()
         sleep(0.2)
-        self.set_speeds(-80, 40)
-        sleep(3.24)
+        self.set_speeds(-50, 50)
+        sleep(3.1)
         self.stop()
         sleep(0.2)
         

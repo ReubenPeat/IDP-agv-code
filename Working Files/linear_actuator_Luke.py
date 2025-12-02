@@ -1,12 +1,12 @@
 from machine import Pin, PWM
 from utime import sleep
 
-FullStrokeTime = 10.7
+FullStrokeTime = 12 #10.7
 FullStrokeDist = 50.0   
 
-defaultHeight = 10.0
-CarryHeight = 21.0
-BottomFloorPickupHeight = 22.0
+defaultHeight = 20.0
+CarryHeight = 20.0
+BottomFloorPickupHeight = 38.0
 TopFloorPickupHeight = 4.0
 """
 # Lift amounts (mm)
@@ -52,14 +52,14 @@ class Actuator:
         self.pwm.duty_u16(0)
 
     def fullExtension(self):
-        self.run(DirExtend, 60)
-        sleep(FullStrokeTime)
+        self.run(DirExtend, 90)
+        sleep(7)
         self.stop()
         self.currentHeight = 0.0
         print("Fully Extended")
         
     def fullRetraction(self):
-        self.run(DirRetract, 60)
+        self.run(DirRetract, 50)
         sleep(FullStrokeTime)
         self.stop()
         self.currentHeight = FullStrokeDist
@@ -67,15 +67,17 @@ class Actuator:
     
     def moveUp(self, dist):
         time = distToTime(dist)
-        self.run(DirRetract, 60)
+        self.run(DirRetract, 50)
         sleep(time)
         self.stop()
+        self.currentHeight += timeToDist(time)
     
     def moveDown(self, dist):
         time = distToTime(dist)
-        self.run(DirExtend, 60)
+        self.run(DirExtend, 50)
         sleep(time)
         self.stop()
+        self.currentHeight -= timeToDist(time)
     
     def setHeight(self, height):
         if height < 0:
@@ -101,7 +103,7 @@ class Actuator:
         self.setHeight(defaultHeight)
 
     def pickUp(self):
-        self.moveUp(4.0)
+        self.moveUp(12.0)
     
     def carry(self):
         if self.currentHeight != CarryHeight:
