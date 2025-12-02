@@ -107,19 +107,16 @@ class TCS34725:
 
 
     
-def block_identification():
+def block_identification(enable_CS, CS_sensor, i2c):
     try:
-        # Initialize I2C (adjust pins for your board)
-        enable_CS_pin = 11
-        enable_CS = Pin(enable_CS_pin, Pin.OUT)
         enable_CS.value(1)
+        clear, red, green, blue = CS_sensor.read_raw()
         i2c = I2C(1, scl=Pin(15), sda=Pin(14), freq=400000)
-        print(i2c.scan())
         sensor = TCS34725(i2c)
-        clear, red, green, blue = sensor.read_raw()
-        temp = sensor.calculate_color_temperature(red, green, blue)
-        lux = sensor.calculate_lux(red, green, blue)
-        red_ratio, green_ratio, blue_ratio = sensor.calculate_ratios(red, green, blue, clear)
+        print(sensor.i2c)
+        print(clear)
+        red_ratio, green_ratio, blue_ratio = CS_sensor.calculate_ratios(red, green, blue, clear)
+        print(red_ratio, green_ratio, blue_ratio)
         sleep(0.5)
         enable_CS.value(0)
         if red_ratio > 0.35 and red_ratio < 0.46 and green_ratio > 0.21 and green_ratio < 0.29 and blue_ratio > 0.26 and blue_ratio < 0.36:
@@ -136,6 +133,16 @@ def block_identification():
     except Exception as e:
         print("Error:", e)
         return " "
+    
 while True:
-    print(block_identification())
-    sleep(0.5)
+    # Initialize I2C (adjust pins for your board)
+    enable_CS_pin = 11
+    enable_CS = Pin(enable_CS_pin, Pin.OUT)
+    enable_CS.value(0)
+    i2c = I2C(1, scl=Pin(15), sda=Pin(14), freq=400000)
+    print(i2c.scan())
+    sleep(0.2)
+    sensor = TCS34725(i2c)
+    
+    print(block_identification(enable_CS, sensor, i2c))
+    sleep(2)
