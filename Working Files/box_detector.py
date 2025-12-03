@@ -39,11 +39,11 @@ def detection_trigger(motor_controller, route, vl53l0):
             vl53l0.stop()         # Stop TOF sensor
             motor_controller.stop()
             sleep(0.1)
-            motor_controller.move_straight(-50)
-            sleep(1.2)
-            motor_controller.stop()
-            sleep(0.1)
-            motor_controller.turn(90, "right")     # Rotate 90deg clockwise to face box
+            # motor_controller.move_straight(-50)
+            # sleep(1.2)
+            # motor_controller.stop()
+            # sleep(0.1)
+            motor_controller.turn(103, "right")     # Rotate 90deg clockwise to face box
             
             # move forward until the line break
             motor_controller.move_straight(40)        

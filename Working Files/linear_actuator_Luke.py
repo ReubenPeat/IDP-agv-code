@@ -5,7 +5,7 @@ FullStrokeTime = 12 #10.7
 FullStrokeDist = 50.0   
 
 defaultHeight = 20.0
-CarryHeight = 20.0
+CarryHeight = 10.0
 BottomFloorPickupHeight = 38.0
 TopFloorPickupHeight = 4.0
 """
@@ -34,6 +34,7 @@ DirRetract = 1   # away from full extension
 
 
 class Actuator:
+    currentHeight = 0.0
     def __init__(self, dirPin, PWMPin):
         self.mDir = Pin(dirPin, Pin.OUT)
         self.pwm = PWM(Pin(PWMPin))
@@ -53,7 +54,7 @@ class Actuator:
 
     def fullExtension(self):
         self.run(DirExtend, 90)
-        sleep(7)
+        sleep(FullStrokeTime)
         self.stop()
         self.currentHeight = 0.0
         print("Fully Extended")
@@ -86,6 +87,7 @@ class Actuator:
             height = FullStrokeDist
             
         dist = height - self.currentHeight
+        print(dist)
         if dist > 0:
             self.moveUp(dist)
         else:

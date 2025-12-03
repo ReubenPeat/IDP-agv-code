@@ -28,6 +28,8 @@ class Route:
             self.previousPosition = self.get_currentPosition()
             self.currentPosition = self.vertexRoute.pop(0)  # Now in new position, as given by the route
             instruction = self.instructions.pop(0)          # Next instruction in the route
+            print(instruction)
+            print(self.currentPosition)
             if instruction == 'f':
                 return "forwards"
             elif instruction == 'b':
@@ -94,6 +96,9 @@ class Graph:
         self.addDirectionVertices("IB", "Green", 'l')
         self.addDirectionVertices("IB", "BLR-1", 'l')
         self.addDirectionVertices("IB", "ILR-2", 'f')
+        
+        self.addDirectionVertices("IY", "IG", 'f')
+        self.addDirectionVertices("IG", "IY", 'f')
         
         self.addEdgeVertices("IS", "IY", 73)
         self.addEdgeVertices("IY", "IR", 29)
@@ -225,8 +230,6 @@ class Graph:
         self.addDirection(index1, index2, direction)
         
     def dijkstra(self, startVertex, endVertex):
-        print(startVertex)
-        print(endVertex)
         minDistances = {vertex:10e8 for vertex in self.get_Vertices()}       # Set up to the minimum distances from the start vertex, initially basically infinite
         previousVertex = {vertex:"" for vertex in self.get_Vertices()}       # Set up the previous vertex dictionary, the previous vertex in the route
         verticesLeftToVisit = self.get_Vertices()                            # Set up the list of vertices left to visit - finished when this is emptied

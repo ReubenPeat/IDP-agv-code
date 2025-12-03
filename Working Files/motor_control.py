@@ -43,18 +43,18 @@ class Motor_controller:
     def turn(self, angle=90, direction="left"):
         if direction == "left":
             self.set_speeds(16, 90)
-            sleep(0.018 * angle)
+            sleep(0.019 * angle)
         else:
-            self.set_speeds(90, 16)
-            sleep(0.014 * angle)
+            self.set_speeds(90, 20)
+            sleep(0.0135 * angle)
                         
         self.move_straight(50)
         
-    def rotate180(self):
+    def rotateOnSpot(self, angle):
         self.stop()
         sleep(0.2)
         self.set_speeds(-50, 50)
-        sleep(3.1)
+        sleep(3.1 * (angle / 180) )
         self.stop()
         sleep(0.2)
         
@@ -84,6 +84,6 @@ class Motor_controller:
             self.mDir.value(0)                     # forward = 0; reverse = 1; motor
             self.pwm.duty_u16(int(65535 * speed / 100))  # speed range 0-100 motor
 
-        def Reverse(self, speed=30):
+        def Reverse(self, speed=50):
             self.mDir.value(1)
             self.pwm.duty_u16(int(65535 * speed / 100))

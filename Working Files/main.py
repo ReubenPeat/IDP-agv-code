@@ -57,15 +57,16 @@ actuator.bottomFloorPickUp()
 motor_controller = Motor_controller(4, 5, 7, 6)
 graph = Graph()
 
-verticesToCheck = ["ILL-1", "ILL-2", "ILL-3", "ILL-4", "ILL-5", "ILL-6",
+verticesToCheck = ["ILL-2", "ILL-3", "ILL-4", "ILL-5", "ILL-6",
                    "IUR-1", "IUR-2", "IUR-3", "IUR-4", "IUR-5", "IUR-6",
                    "IUL-6", "IUL-5", "IUL-4", "IUL-3", "IUL-2", "IUL-1",
-                   "ILR-6", "ILR-5", "ILR-4", "ILR-3", "ILR-2", "ILR-1"]    # We must visit all of these in order to check for blocks
+                   "ILL-6", "ILR-5", "ILR-4", "ILR-3", "ILR-2", "ILR-1"]    # We must visit all of these in order to check for blocks
 
 defaultRoute = Route(graph, ["Start", "IR", "PLL-1", "PLR-1", "IB", "Start"]) # initialise the first route
 # Full route: ["Start", "IR", "PLL-1", "PUR-1", "PUR-2", "PUL-2", "PUL-1", "PLR-1", "IB", "Start"]
 route = defaultRoute
 hasBox = False
+boxFound = False
 
 def pick_up_box(route, graph, actuator):
     actuator.pickUp()
@@ -73,11 +74,11 @@ def pick_up_box(route, graph, actuator):
     colour = block_identification(enable_CS)         # Identify the colour of the block picked up
     hasBox = True
     
-    for i in range(0, 10):
-        if colour != " ":
+    for i in range(0, 4):
+        if colour == " ":
             colour = block_identification(enable_CS)
             sleep(0.2)
-            if colour != " " and i == 9:
+            if colour == " " and i == 3:
                 colour = "Red"
             print(colour)
         else:
@@ -85,29 +86,38 @@ def pick_up_box(route, graph, actuator):
         
         
     
-    intersectionPosition = route.previousPosition
+    intersectionPosition = route.get_currentPosition()
     actualCurrentPosition = "B" + intersectionPosition[1:]  # Update the current position to the bay, since we moved there without telling the route object
     print(actualCurrentPosition)
-    route = Route(graph, [actualCurrentPosition, colour])   # create a new route leading back to the start
+    route = Route(graph, [actualCurrentPosition, colour, colour])   # create a new route leading back to the start
+    route.vertexRoute.pop(2)
+    route.instructions.pop(2)
+    print(route.vertexRoute)
+    print(route.instructions)
     instruction = route.intersection()                      # Call intersection to tell the route object we will now turn around
     
-    motor_controller.move_straight(-80)
-    sleep(4)
+    motor_controller.move_straight(-50)
+    sleep(1)
     motor_controller.stop()
-    motor_controller.rotate180()
+    actuator.moveDown(25)
+    motor_controller.rotateOnSpot(180)
     motor_controller.stop()                           # Reverse out and turn around ready to path back to the start
+    #motor_controller.move_straight(-50)
+    #sleep(0.3)
+    return route
 
 def drop_off_box(route, graph, actuator):
-    motor_controller.move_straight(80)
-    sleep(1)
+    motor_controller.move_straight(60)
+    sleep(0.1)
+    motor_controller.stop()
     
     # Drop off box
     actuator.dropOff()
     hasBox = False
     instruction = route.intersection()                # Call intersection to tell the route object we will now turn around
-    motor_controller.move_straight(-80)
+    motor_controller.move_straight(-50)
     sleep(1)
-    motor_controller.rotate180()
+    motor_controller.rotateOnSpot(190)
 
 print("Ready")
 while button.value() == 0:
@@ -121,26 +131,27 @@ while line_sensor_inner_right.value() == 0 or line_sensor_inner_left.value() == 
     motor_controller.move_straight()        # Initially, we will be in the start box - no line to follow, so go forward until you find it
     
 
-led.value(0)
+led.value(1)
 
 # Main loop: run until button pressed again
 while True:
     # If button pressed again, exit
     if button.value() == 1:
         break
+    """
     if route.get_currentPosition() == "Start":
         led.value(0)
     else:
         led.value(1)
-
+    """
     # Line following control
     instruction = line_sensor_motor_control(motor_controller, route)
     
     if instruction == "No Instruction":
         pass
     else:
-        boxFound = False
         if hasBox==False:
+            boxFound = False
             if route.get_currentPosition() == verticesToCheck[0]:
                 motor_controller.stop()
                 sleep(0.5)
@@ -156,8 +167,8 @@ while True:
                 boxFound = detection_trigger(motor_controller, route, vl53l0)
                 verticesToCheck.pop(0)
                 print(boxFound)
-        if boxFound == True:
-            pick_up_box(route, graph, actuator) 
+        if boxFound == True and hasBox == False:
+            route = pick_up_box(route, graph, actuator) 
         else:
             if instruction == "forwards":
                 motor_controller.move_straight(90)       # Move forward until over the line
@@ -168,14 +179,23 @@ while True:
                 motor_controller.move_straight(-80)
                 sleep(1)
             elif instruction == "turn":
-                motor_controller.rotate180()
+                motor_controller.rotateOnSpot(180)
             elif instruction == "left":
                 motor_controller.turn(90, "left")      # Rotate 90deg anticlockwise
             elif instruction == "right":
                 motor_controller.turn(90, "right")     # Rotate 90deg clockwise
             elif instruction == "stop":  
-                motor_controller.stop()
-                break
+                if route.get_currentPosition() == "Start":
+                    motor_controller.move_straight(80)
+                    sleep(1)
+                    motor_controller.stop()
+                    actuator.dropOff()
+                    break
+                else:
+                    drop_off_box(route, graph, actuator)
+                    if len(verticesToCheck) > 0:
+                        route = defaultRoute
+                    
         
         if route.isAtEndOfRoute():
             if hasBox:                  # If we have a box then drop it off!
