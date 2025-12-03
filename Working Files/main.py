@@ -80,7 +80,6 @@ def pick_up_box(route, graph, actuator):
             sleep(0.2)
             if colour == " " and i == 3:
                 colour = "Red"
-            print(colour)
         else:
             break
         
@@ -92,8 +91,6 @@ def pick_up_box(route, graph, actuator):
     route = Route(graph, [actualCurrentPosition, colour, colour])   # create a new route leading back to the start
     route.vertexRoute.pop(2)
     route.instructions.pop(2)
-    print(route.vertexRoute)
-    print(route.instructions)
     instruction = route.intersection()                      # Call intersection to tell the route object we will now turn around
     
     motor_controller.move_straight(-50)
@@ -119,7 +116,6 @@ def drop_off_box(route, graph, actuator):
     sleep(1)
     motor_controller.rotateOnSpot(190)
 
-print("Ready")
 while button.value() == 0:
     pass
 while button.value() == 1:
@@ -163,10 +159,8 @@ while True:
                     # BOTTOM FLOOR sequence       
                     actuator.bottomFloorPickUp()
                     pass
-                print("Checking for box")
                 boxFound = detection_trigger(motor_controller, route, vl53l0)
                 verticesToCheck.pop(0)
-                print(boxFound)
         if boxFound == True and hasBox == False:
             route = pick_up_box(route, graph, actuator) 
         else:
