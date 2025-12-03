@@ -107,8 +107,8 @@ def pick_up_box(route, graph, actuator):
     return route
 
 def drop_off_box(route, graph, actuator):
-    motor_controller.move_straight(60)
-    sleep(0.1)
+    #motor_controller.move_straight(60)
+    #sleep(0.1)
     motor_controller.stop()
     
     # Drop off box
